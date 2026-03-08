@@ -1,0 +1,4 @@
+[*.cs]
+# Disable squigglies for unused private members
+dotnet_diagnostic.IDE0051.severity = none
+dotnet_diagnostic.IDE0044.severity = none
