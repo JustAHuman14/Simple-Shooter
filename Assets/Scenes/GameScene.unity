@@ -17694,19 +17694,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 900917378}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5fb82cc43dace634a6cbfcc3493c032, type: 3}
+  m_Script: {fileID: 11500000, guid: 7d4f7894ab8d077b48cb83aa45417f28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bulletPrefab: {fileID: 561829510392377511, guid: bc49c32d76f15b998a02343c0c6658cd,
-    type: 3}
-  _bulletSpawn: {fileID: 179731893}
-  _camera: {fileID: 1628956562}
-  _animator: {fileID: 0}
-  _muzzleFlash: {fileID: 3945420323639873664}
-  _weapon: {fileID: 11400000, guid: 1eb26afa9c3dd0c3dac66191a5658f9a, type: 2}
-  _gameInput: {fileID: 918319179}
-  maxBulletsInMag: 0
-  bulletsRemainingInMag: 0
 --- !u!1 &2103495321
 GameObject:
   m_ObjectHideFlags: 0
