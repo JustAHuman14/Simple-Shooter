@@ -41,16 +41,16 @@ namespace Assets.Scripts.Character
 
             if (_isPlayerInSightRange && !_isPlayerInAttackRange)
                 ChasePlayer();
-            // else if (_isPlayerVisible && _isPlayerInAttackRange)
-            //     AttackPlayer();
+            else if (_isPlayerInAttackRange && _isPlayerInAttackRange)
+                AttackPlayer();
+        }
+
+        private void AttackPlayer()
+        {
+            _agent.SetDestination(transform.position);
         }
 
         private void ChasePlayer() => _agent?.SetDestination(_player.position);
-
-        private void Patrol()
-        {
-
-        }
 
         private void HandleDamage()
         {

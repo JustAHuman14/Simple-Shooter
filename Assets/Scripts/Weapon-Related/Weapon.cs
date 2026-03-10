@@ -3,29 +3,22 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Weapon_Related
 {
-    public abstract class Weapon : MonoBehaviour
+    public class Weapon : MonoBehaviour
     {
         [Header("Serialized Fields")]
         [SerializeField] public Bullet _bulletPrefab;
-        [SerializeField] public Transform _bulletSpawn;
         [SerializeField] public Camera _camera;
-        [SerializeField] public Animator _animator;
-        [SerializeField] public GameObject _muzzleFlash;
+        [SerializeField] private WeaponSO _weapon;
+        [SerializeField] private GameInput _gameInput;
 
         [Header("Non-Serialized Fields")]
-        private AudioSource _audioSource;
-        private ParticleSystem _muzzleFlashEffect;
         private Vector3 _bulletDirection;
-        public int maxNumOfBulletsInMag = 30;
         public int bulletsRemainingInMag;
         private IObjectPool<Bullet> _bulletObjectPool;
         private int defaultCapacity = 120;
         private int maxSize = 500;
-        protected abstract float SecondsGapBetweenBullets { get; set; }
-        private readonly float _secondsGapInReloading = 0.01f;
-        protected abstract float BulletSpeed { get; set; }
         private Coroutine _shootCoroutine;
         private Coroutine _reloadCoroutine;
         private bool _isShooting;
@@ -34,24 +27,17 @@ namespace Assets.Scripts
 
         public void Awake()
         {
-            _audioSource = GetComponent<AudioSource>();
-            _muzzleFlashEffect = _muzzleFlash.GetComponent<ParticleSystem>();
             _bulletObjectPool = new ObjectPool<Bullet>(
                 CreateBullet,
                 OnGetFromPool,
-                OnReleaseToPool,
-                OnDestroyPooledObject,
+                bullet => bullet.gameObject.SetActive(false),
+                bullet => Destroy(bullet.gameObject),
                 true,
                 defaultCapacity,
                 maxSize
             );
 
-            bulletsRemainingInMag = maxNumOfBulletsInMag;
-        }
-
-        private void OnDestroyPooledObject(Bullet bullet)
-        {
-            Destroy(bullet.gameObject);
+            bulletsRemainingInMag = _weapon.maxBulletsInMag;
         }
 
         private void OnGetFromPool(Bullet bullet)
@@ -60,15 +46,10 @@ namespace Assets.Scripts
                 bullet.gameObject.SetActive(true);
         }
 
-        private void OnReleaseToPool(Bullet bullet)
-        {
-            bullet.gameObject.SetActive(false);
-        }
-
         private Bullet CreateBullet()
         {
             Bullet bulletInstance = Instantiate(_bulletPrefab);
-            bulletInstance.objectPool = _bulletObjectPool;
+            bulletInstance.bulletObjectPool = _bulletObjectPool;
             return bulletInstance;
         }
 
@@ -83,18 +64,12 @@ namespace Assets.Scripts
 
         protected void HandleShootingAndReload()
         {
-            if (Input.GetMouseButtonDown(0) && !_isShooting && bulletsRemainingInMag > 0)
+            if (_gameInput.IsPlayerAttacking() && _reloadCoroutine == null && !_isShooting && bulletsRemainingInMag > 0)
             {
-                if (_reloadCoroutine != null)
-                {
-                    StopCoroutine(_reloadCoroutine);
-                    _reloadCoroutine = null;
-                }
-
                 _shootCoroutine ??= StartCoroutine(ShootRoutine());
             }
 
-            if (Input.GetKeyDown(KeyCode.R) && bulletsRemainingInMag < maxNumOfBulletsInMag && !_isShooting)
+            if (_gameInput.IsPlayerReloading() && bulletsRemainingInMag < _weapon.maxBulletsInMag && !_isShooting)
             {
                 _reloadCoroutine ??= StartCoroutine(ReloadRoutine());
             }
@@ -105,14 +80,15 @@ namespace Assets.Scripts
             _isShooting = true;
             FireOneBullet();
 
-            yield return new WaitForSeconds(SecondsGapBetweenBullets);
+            yield return new WaitForSeconds(_weapon.secondsGapBetweenBullets);
 
-            while (Input.GetMouseButton(0) && bulletsRemainingInMag > 0)
+            while (_gameInput.IsPlayerAttacking() && bulletsRemainingInMag > 0)
             {
                 FireOneBullet();
-                yield return new WaitForSeconds(SecondsGapBetweenBullets);
+                yield return new WaitForSeconds(_weapon.secondsGapBetweenBullets);
             }
 
+            _shootCoroutine = null;
             _isShooting = false;
         }
 
@@ -122,11 +98,11 @@ namespace Assets.Scripts
 
             bulletObject ??= CreateBullet();
 
-            bulletObject.transform.position = _bulletSpawn.position;
+            bulletObject.transform.position = _weapon.bulletSpawn.position;
             bulletObject.transform.rotation = Quaternion.LookRotation(_bulletDirection);
 
             if (bulletObject.TryGetComponent(out Rigidbody bulletRb))
-                bulletRb.velocity = _bulletDirection * BulletSpeed;
+                bulletRb.velocity = _bulletDirection * _weapon.bulletSpeed;
 
             bulletsRemainingInMag--;
             OnShoot?.Invoke();
@@ -135,11 +111,11 @@ namespace Assets.Scripts
 
         private IEnumerator ReloadRoutine()
         {
-            while (bulletsRemainingInMag < maxNumOfBulletsInMag)
+            while (bulletsRemainingInMag < _weapon.maxBulletsInMag)
             {
                 bulletsRemainingInMag++;
                 OnReload?.Invoke();
-                yield return new WaitForSeconds(_secondsGapInReloading);
+                yield return new WaitForSeconds(_weapon.secondsGapInReloading);
             }
 
             _reloadCoroutine = null;
@@ -147,9 +123,8 @@ namespace Assets.Scripts
 
         private void PlayEffectsAfterFiring()
         {
-            _audioSource.PlayOneShot(_audioSource.clip);
-            _muzzleFlashEffect.Play();
+            _weapon.audioSource.PlayOneShot(_weapon.audioSource.clip);
+            _weapon.muzzleFlashEffect.Play();
         }
     }
 }
-

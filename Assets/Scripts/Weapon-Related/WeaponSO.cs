@@ -1,16 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu()]
 public class WeaponSO : ScriptableObject
 {
-    // Start is called before the first frame update
-   
-   
-     
-    
+    public enum WeaponType
+    {
+        Primary = 0,
+        Secondary = 1
+    }
 
-    // Update is called once per frame
-    
+    public WeaponType weaponType;
+    public int maxBulletsInMag;
+    public Transform bulletSpawn;
+    public AudioSource audioSource;
+    public ParticleSystem muzzleFlashEffect;
+    public float secondsGapBetweenBullets;
+    public float secondsGapInReloading;
+    public int bulletSpeed;
 }
