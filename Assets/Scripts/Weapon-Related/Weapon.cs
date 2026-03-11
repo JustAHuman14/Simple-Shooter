@@ -12,21 +12,28 @@ namespace Assets.Scripts.Weapon_Related
         [SerializeField] public Camera _camera;
         [SerializeField] private WeaponSO _weapon;
         [SerializeField] private GameInput _gameInput;
+        [SerializeField] private GameObject _muzzleFlash;
 
         [Header("Non-Serialized Fields")]
         private Vector3 _bulletDirection;
+        public int maxBulletsInMag;
         public int bulletsRemainingInMag;
         private IObjectPool<Bullet> _bulletObjectPool;
-        private int defaultCapacity = 120;
-        private int maxSize = 500;
+        private readonly int defaultCapacity = 500;
+        private readonly int maxSize = 2000;
         private Coroutine _shootCoroutine;
         private Coroutine _reloadCoroutine;
+        [SerializeField] private Transform _bulletSpawn;
+        private AudioSource _audioSource;
+        private ParticleSystem _muzzleFlashEffect;
         private bool _isShooting;
         public event Action OnShoot;
         public event Action OnReload;
 
         public void Awake()
         {
+            _audioSource = GetComponent<AudioSource>();
+            _muzzleFlashEffect = _muzzleFlash.GetComponent<ParticleSystem>();
             _bulletObjectPool = new ObjectPool<Bullet>(
                 CreateBullet,
                 OnGetFromPool,
@@ -36,8 +43,8 @@ namespace Assets.Scripts.Weapon_Related
                 defaultCapacity,
                 maxSize
             );
-
-            bulletsRemainingInMag = _weapon.maxBulletsInMag;
+	    maxBulletsInMag = _weapon.maxBulletsInMag;
+            bulletsRemainingInMag = maxBulletsInMag;
         }
 
         private void OnGetFromPool(Bullet bullet)
@@ -65,14 +72,10 @@ namespace Assets.Scripts.Weapon_Related
         protected void HandleShootingAndReload()
         {
             if (_gameInput.IsPlayerAttacking() && _reloadCoroutine == null && !_isShooting && bulletsRemainingInMag > 0)
-            {
                 _shootCoroutine ??= StartCoroutine(ShootRoutine());
-            }
 
             if (_gameInput.IsPlayerReloading() && bulletsRemainingInMag < _weapon.maxBulletsInMag && !_isShooting)
-            {
                 _reloadCoroutine ??= StartCoroutine(ReloadRoutine());
-            }
         }
 
         private IEnumerator ShootRoutine()
@@ -98,7 +101,7 @@ namespace Assets.Scripts.Weapon_Related
 
             bulletObject ??= CreateBullet();
 
-            bulletObject.transform.position = _weapon.bulletSpawn.position;
+            bulletObject.transform.position = _bulletSpawn.position;
             bulletObject.transform.rotation = Quaternion.LookRotation(_bulletDirection);
 
             if (bulletObject.TryGetComponent(out Rigidbody bulletRb))
@@ -123,8 +126,8 @@ namespace Assets.Scripts.Weapon_Related
 
         private void PlayEffectsAfterFiring()
         {
-            _weapon.audioSource.PlayOneShot(_weapon.audioSource.clip);
-            _weapon.muzzleFlashEffect.Play();
+            _audioSource.PlayOneShot(_audioSource.clip);
+            _muzzleFlashEffect.Play();
         }
     }
 }

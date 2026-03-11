@@ -11,9 +11,6 @@ public class WeaponSO : ScriptableObject
 
     public WeaponType weaponType;
     public int maxBulletsInMag;
-    public Transform bulletSpawn;
-    public AudioSource audioSource;
-    public ParticleSystem muzzleFlashEffect;
     public float secondsGapBetweenBullets;
     public float secondsGapInReloading;
     public int bulletSpeed;
