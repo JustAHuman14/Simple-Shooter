@@ -45,7 +45,7 @@ namespace Assets.Scripts.Character
         {
             HandleSpeedAndDirection();
             HandleInteraction();
-	    HandleItemDrop();	
+            HandleItemDrop();
 
             if (_gameInput.IsPlayerSprinting())
                 _isSprinting = _isSprinting != true;
@@ -64,16 +64,16 @@ namespace Assets.Scripts.Character
 
         private void HandleItemDrop()
         {
-            
+
         }
 
         private void HandleInteraction()
         {
-        	Debug.DrawRay(
-        	_playerCamera.transform.position, 
-        	_playerCamera.transform.forward * _interactRadius,
-        	Color.red
-        	);
+            Debug.DrawRay(
+            _playerCamera.transform.position,
+            _playerCamera.transform.forward * _interactRadius,
+            Color.red
+            );
             if (Physics.Raycast(
                 _playerCamera.transform.position,
                 _playerCamera.transform.forward,
@@ -84,14 +84,14 @@ namespace Assets.Scripts.Character
                 if (hit.collider.TryGetComponent(out IPickable pickable))
                 {
                     print($"Press \"E\" to Interact with {hit.collider.gameObject.name}");
-		    
-		    if (_gameInput.IsPlayerPicking())
-		    	if (hit.collider.TryGetComponent(out Weapon weapon))
-		    	{
-		    	    if (weapon.weapon.weaponType == WeaponType.Primary)
-		    	        pickable.Pick(_primaryWeapon.transform);
-		    	    else if (weapon.weapon.weaponType == WeaponType.Secondary)
-		    	        pickable.Pick(_secondaryWeapon.transform);    
+
+                    if (_gameInput.IsPlayerPicking())
+                        if (hit.collider.TryGetComponent(out Weapon weapon))
+                        {
+                            if (weapon.weapon.weaponType == WeaponType.Primary)
+                                pickable.Pick(_primaryWeapon.transform, WeaponType.Primary);
+                            else if (weapon.weapon.weaponType == WeaponType.Secondary)
+                                pickable.Pick(_secondaryWeapon.transform, WeaponType.Secondary);
                         }
                 }
             }
