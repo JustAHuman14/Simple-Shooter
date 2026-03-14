@@ -3,10 +3,11 @@ using System;
 using TMPro;
 using Assets.Scripts.Interfaces;
 using UnityEngine.InputSystem;
+using Assets.Scripts.Weapon_Related;
 
 namespace Assets.Scripts.Character
 {
-    public class Player : MonoBehaviour
+    public class Player : MonoBehaviour, ICharacter
     {
         // Serialized Fields
         [SerializeField] private GameInput _gameInput;
@@ -44,7 +45,7 @@ namespace Assets.Scripts.Character
         {
             HandleSpeedAndDirection();
             HandleInteraction();
-
+	    HandleItemDrop();	
 
             if (_gameInput.IsPlayerSprinting())
                 _isSprinting = _isSprinting != true;
@@ -61,8 +62,18 @@ namespace Assets.Scripts.Character
             _isSprinting = _isSprinting != true;
         }
 
+        private void HandleItemDrop()
+        {
+            
+        }
+
         private void HandleInteraction()
         {
+        	Debug.DrawRay(
+        	_playerCamera.transform.position, 
+        	_playerCamera.transform.forward * _interactRadius,
+        	Color.red
+        	);
             if (Physics.Raycast(
                 _playerCamera.transform.position,
                 _playerCamera.transform.forward,
@@ -70,12 +81,18 @@ namespace Assets.Scripts.Character
                 _interactRadius
             ))
             {
-                if (hit.collider.TryGetComponent(out IInteractable interactable))
+                if (hit.collider.TryGetComponent(out IPickable pickable))
                 {
                     print($"Press \"E\" to Interact with {hit.collider.gameObject.name}");
-
-                    // if (Input.GetKeyDown(KeyCode.E))
-                    //     interactable.Interact();
+		    
+		    if (_gameInput.IsPlayerPicking())
+		    	if (hit.collider.TryGetComponent(out Weapon weapon))
+		    	{
+		    	    if (weapon.weapon.weaponType == WeaponType.Primary)
+		    	        pickable.Pick(_primaryWeapon.transform);
+		    	    else if (weapon.weapon.weaponType == WeaponType.Secondary)
+		    	        pickable.Pick(_secondaryWeapon.transform);    
+                        }
                 }
             }
         }

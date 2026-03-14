@@ -2,15 +2,16 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
+using Assets.Scripts.Interfaces;
 
 namespace Assets.Scripts.Weapon_Related
 {
-    public class Weapon : MonoBehaviour
+    public class Weapon : MonoBehaviour, IPickable
     {
         [Header("Serialized Fields")]
         [SerializeField] public Bullet _bulletPrefab;
         [SerializeField] public Camera _camera;
-        [SerializeField] private WeaponSO _weapon;
+        public WeaponSO weapon;
         [SerializeField] private GameInput _gameInput;
         [SerializeField] private GameObject _muzzleFlash;
 
@@ -29,7 +30,8 @@ namespace Assets.Scripts.Weapon_Related
         private bool _isShooting;
         public event Action OnShoot;
         public event Action OnReload;
-
+	private bool _isPicked;
+		
         public void Awake()
         {
             _audioSource = GetComponent<AudioSource>();
@@ -43,7 +45,7 @@ namespace Assets.Scripts.Weapon_Related
                 defaultCapacity,
                 maxSize
             );
-	    maxBulletsInMag = _weapon.maxBulletsInMag;
+            maxBulletsInMag = weapon.maxBulletsInMag;
             bulletsRemainingInMag = maxBulletsInMag;
         }
 
@@ -61,12 +63,14 @@ namespace Assets.Scripts.Weapon_Related
         }
 
         protected virtual void Update()
-        {
+        { 
+            _isPicked = transform.parent != null;
             Ray ray = _camera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0));
             Vector3 aimPoint = Physics.Raycast(ray, out RaycastHit hit, 1000f) ? hit.point : ray.GetPoint(1000f);
             _bulletDirection = (aimPoint - transform.position).normalized;
-
-            HandleShootingAndReload();
+	    
+	    if (_isPicked)	
+                HandleShootingAndReload();
         }
 
         protected void HandleShootingAndReload()
@@ -74,7 +78,7 @@ namespace Assets.Scripts.Weapon_Related
             if (_gameInput.IsPlayerAttacking() && _reloadCoroutine == null && !_isShooting && bulletsRemainingInMag > 0)
                 _shootCoroutine ??= StartCoroutine(ShootRoutine());
 
-            if (_gameInput.IsPlayerReloading() && bulletsRemainingInMag < _weapon.maxBulletsInMag && !_isShooting)
+            if (_gameInput.IsPlayerReloading() && bulletsRemainingInMag < weapon.maxBulletsInMag && !_isShooting)
                 _reloadCoroutine ??= StartCoroutine(ReloadRoutine());
         }
 
@@ -83,12 +87,12 @@ namespace Assets.Scripts.Weapon_Related
             _isShooting = true;
             FireOneBullet();
 
-            yield return new WaitForSeconds(_weapon.secondsGapBetweenBullets);
+            yield return new WaitForSeconds(weapon.secondsGapBetweenBullets);
 
             while (_gameInput.IsPlayerAttacking() && bulletsRemainingInMag > 0)
             {
                 FireOneBullet();
-                yield return new WaitForSeconds(_weapon.secondsGapBetweenBullets);
+                yield return new WaitForSeconds(weapon.secondsGapBetweenBullets);
             }
 
             _shootCoroutine = null;
@@ -105,7 +109,7 @@ namespace Assets.Scripts.Weapon_Related
             bulletObject.transform.rotation = Quaternion.LookRotation(_bulletDirection);
 
             if (bulletObject.TryGetComponent(out Rigidbody bulletRb))
-                bulletRb.velocity = _bulletDirection * _weapon.bulletSpeed;
+                bulletRb.velocity = _bulletDirection * weapon.bulletSpeed;
 
             bulletsRemainingInMag--;
             OnShoot?.Invoke();
@@ -114,11 +118,11 @@ namespace Assets.Scripts.Weapon_Related
 
         private IEnumerator ReloadRoutine()
         {
-            while (bulletsRemainingInMag < _weapon.maxBulletsInMag)
+            while (bulletsRemainingInMag < weapon.maxBulletsInMag)
             {
                 bulletsRemainingInMag++;
                 OnReload?.Invoke();
-                yield return new WaitForSeconds(_weapon.secondsGapInReloading);
+                yield return new WaitForSeconds(weapon.secondsGapInReloading);
             }
 
             _reloadCoroutine = null;
@@ -128,6 +132,20 @@ namespace Assets.Scripts.Weapon_Related
         {
             _audioSource.PlayOneShot(_audioSource.clip);
             _muzzleFlashEffect.Play();
+        }
+
+        public void Pick(Transform player)
+        {
+            transform.SetParent(player);
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.Euler(0, 180, 0);
+        }
+
+        private void OnDisable()
+        {
+            _reloadCoroutine = null;
+            _shootCoroutine = null;
+            _isShooting = false;
         }
     }
 }
