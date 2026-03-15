@@ -37,8 +37,11 @@ namespace Assets.Scripts.Weapon_Related
  	    
                 bulletImpactInstance.SetParent(collision.transform);
             }
-            
-            ReleaseBulletToPool();
+
+            if (!collision.gameObject.CompareTag("Weapon"))
+            {
+            	ReleaseBulletToPool();
+            }
         }
 
         private void ReleaseBulletToPool()

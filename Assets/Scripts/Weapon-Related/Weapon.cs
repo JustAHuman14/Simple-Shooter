@@ -34,6 +34,7 @@ namespace Assets.Scripts.Weapon_Related
 
         public void Awake()
         {
+            _gameInput = GameObject.Find("GameInput").GetComponent<GameInput>();
             _audioSource = GetComponent<AudioSource>();
             _muzzleFlashEffect = _muzzleFlash.GetComponent<ParticleSystem>();
             _bulletObjectPool = new ObjectPool<Bullet>(
@@ -65,9 +66,9 @@ namespace Assets.Scripts.Weapon_Related
         protected virtual void Update()
         {
             _isPicked = transform.parent != null;
-            Ray ray = _camera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0));
-            Vector3 aimPoint = Physics.Raycast(ray, out RaycastHit hit, 1000f) ? hit.point : ray.GetPoint(1000f);
-            _bulletDirection = (aimPoint - transform.position).normalized;
+//            Ray ray = _camera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0));
+  //          Vector3 aimPoint = Physics.Raycast(ray, out RaycastHit hit, 1000f) ? hit.point : ray.GetPoint(1000f);
+     //       _bulletDirection = (aimPoint - transform.position).normalized;
 
             if (_isPicked)
                 HandleShootingAndReload();
