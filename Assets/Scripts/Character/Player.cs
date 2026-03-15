@@ -4,6 +4,7 @@ using TMPro;
 using Assets.Scripts.Interfaces;
 using UnityEngine.InputSystem;
 using Assets.Scripts.Weapon_Related;
+using System.Diagnostics;
 
 namespace Assets.Scripts.Character
 {
@@ -16,14 +17,14 @@ namespace Assets.Scripts.Character
         [SerializeField] private Transform _gun, _gunSlot;
         [SerializeField] private float _groundValue = 1f, _groundRadius = 0.4f, _interactRadius = 2f;
         [SerializeField] private TextMeshProUGUI _interactTM;
-        [SerializeField] private GameObject _primaryWeapon, _secondaryWeapon;
+        [SerializeField] private Transform _primaryWeaponSlot1, _primaryWeaponSlot2, _secondaryWeaponSlot;
         [SerializeField] private float _playerSpeed;
-        [SerializeField] private float _jumpForce = 5f;
 
         // Non-Serialized Fields
         private Rigidbody _rb;
         private bool _isGrounded = true, _isJumping;
         private Vector3 _moveDirection;
+        private readonly float _jumpForce = 5f;
         private bool _isSprinting;
         public event Action OnWeaponSwitch;
 
@@ -35,10 +36,7 @@ namespace Assets.Scripts.Character
             _gameInput.OnSprint += HandleSprint;
             _gameInput.OnWeaponSwitch += HandleActiveGun;
 
-            _gameInput.OnJump += ctx =>
-            {
-                _isJumping = _isGrounded;
-            };
+            _gameInput.OnJump += ctx => _isJumping = _isGrounded;
         }
 
         private void Update()
@@ -89,9 +87,22 @@ namespace Assets.Scripts.Character
                         if (hit.collider.TryGetComponent(out Weapon weapon))
                         {
                             if (weapon.weapon.weaponType == WeaponType.Primary)
-                                pickable.Pick(_primaryWeapon.transform, WeaponType.Primary);
+                            {
+                                if (!_primaryWeaponSlot1.childCount == 1)
+                                    pickable.Pick(_primaryWeaponSlot1, WeaponType.Primary);
+                                else if (!_primaryWeaponSlot2.childCount == 1)
+                                    pickable.Pick(_primaryWeaponSlot2, WeaponType.Primary);
+                                else
+                                    print("You can only have 2 primary weapons!");
+
+                            }
                             else if (weapon.weapon.weaponType == WeaponType.Secondary)
-                                pickable.Pick(_secondaryWeapon.transform, WeaponType.Secondary);
+                            {
+                                if (!_secondaryWeaponSlot.childCount == 1)
+                                    pickable.Pick(_secondaryWeapon, WeaponType.Secondary);
+                                else
+                                    print("You can only have 1 secondary weapon!");
+                            }
                         }
                 }
             }
@@ -120,9 +131,7 @@ namespace Assets.Scripts.Character
         private void HandleSpeedAndDirection()
         {
             if (_gameInput.IsPlayerSprinting())
-            {
                 _isSprinting = _isSprinting != true;
-            }
 
             _playerSpeed = _isSprinting ? 10 : 6;
             _moveDirection = _gameInput.GetPlayerMovementVector();

@@ -134,16 +134,11 @@ namespace Assets.Scripts.Weapon_Related
             _muzzleFlashEffect.Play();
         }
 
-        public void Pick(Transform player, WeaponType weaponType)
+        public void Pick(Transform weaponSlot, WeaponType weaponType)
         {
-            if (player.childCount == 1)
-                print($"Max no. of {nameof(weaponType)} weapons reached");
-            else
-            {
-                transform.SetParent(player);
-                transform.localPosition = Vector3.zero;
-                transform.localRotation = Quaternion.Euler(0, 180, 0);
-            }
+            transform.SetParent(weaponSlot);
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.Euler(0, 180, 0);
         }
 
         private void OnDisable()
