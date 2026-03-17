@@ -18,6 +18,7 @@ namespace Assets.Scripts.Character
         [SerializeField] private TextMeshProUGUI _interactTM;
         [SerializeField] private Transform _primaryWeaponSlot1, _primaryWeaponSlot2, _secondaryWeaponSlot;
         [SerializeField] private float _playerSpeed;
+        [SerializeField] private GameObject _pickGunUI;
 
         // Non-Serialized Fields
         private Rigidbody _rb;
@@ -25,13 +26,20 @@ namespace Assets.Scripts.Character
         private Vector3 _moveDirection;
         private readonly float _jumpForce = 5f;
         private bool _isSprinting;
-        public event Action OnWeaponSwitch;
+        private Weapon _weapon;
+        private Weapon primaryWeapon1;
+        private Weapon primaryWeapon2;
+        private Weapon secondaryWeapon;
+        private bool _isGunInPickingRange;
+        public event Action<Weapon> OnWeaponSwitch;
+        public event Action<Weapon> OnWeaponShoot;
+        public event Action<Weapon> OnWeaponReload;
+        public event Action<GameObject> OnGunInPickingRange;
 
         private void Awake()
         {
             _rb = GetComponent<Rigidbody>();
             _rb.freezeRotation = true;
-
             _gameInput.OnSprint += HandleSprint;
             _gameInput.OnWeaponSwitch += HandleActiveGun;
             _gameInput.OnJump += ctx => _isJumping = _isGrounded;
@@ -43,6 +51,8 @@ namespace Assets.Scripts.Character
             HandleInteraction();
             HandleItemDrop();
 
+            _pickGunUI.SetActive(_isGunInPickingRange);
+
             if (_gameInput.IsPlayerSprinting())
                 _isSprinting = _isSprinting != true;
         }
@@ -53,15 +63,9 @@ namespace Assets.Scripts.Character
             PlayerMovement();
         }
 
-        private void HandleSprint(InputAction.CallbackContext context)
-        {
-            _isSprinting = _isSprinting != true;
-        }
+        private void HandleSprint(InputAction.CallbackContext context) => _isSprinting = _isSprinting != true;
 
-        private void HandleItemDrop()
-        {
-
-        }
+        private void HandleItemDrop(){}
 
         private void HandleInteraction()
         {
@@ -74,29 +78,51 @@ namespace Assets.Scripts.Character
                 if (hit.collider.TryGetComponent(out IPickable pickable))
                 {
                     print($"Press \"E\" to Interact with {hit.collider.gameObject.name}");
+                    OnGunInPickingRange?.Invoke(hit.collider.gameObject);
+                    _isGunInPickingRange = true;
 
                     if (_gameInput.IsPlayerPicking())
+                    {
                         if (hit.collider.TryGetComponent(out Weapon weapon))
                         {
+                            weapon.OnShoot += weapon => OnWeaponShoot?.Invoke(weapon);
+                            weapon.OnReload += weapon => OnWeaponReload?.Invoke(weapon);
+
+
                             if (weapon.weapon.weaponType == WeaponType.Primary)
                             {
-                                if (_primaryWeaponSlot1.childCount != 1)
-                                    pickable.Pick(_primaryWeaponSlot1, WeaponType.Primary);
-                                else if (_primaryWeaponSlot2.childCount != 1)
-                                    pickable.Pick(_primaryWeaponSlot2, WeaponType.Primary);
+                                if (_primaryWeaponSlot1.childCount == 0)
+                                {
+                                    pickable.Pick(_primaryWeaponSlot1);
+                                    primaryWeapon1 = weapon;
+                                    WeaponSwitch(1, primaryWeapon1);
+                                }
+                                else if (_primaryWeaponSlot1.childCount == 1)
+                                {
+                                    pickable.Pick(_primaryWeaponSlot2);
+                                    primaryWeapon2 = weapon;
+                                    WeaponSwitch(2, primaryWeapon2);
+                                }
                                 else
                                     print("You can only have 2 primary weapons!");
-
                             }
                             else if (weapon.weapon.weaponType == WeaponType.Secondary)
                             {
-                                if (_secondaryWeaponSlot.childCount != 1)
-                                    pickable.Pick(_secondaryWeaponSlot, WeaponType.Secondary);
-                                else
+                                if (_secondaryWeaponSlot.childCount == 1)
+                                {
                                     print("You can only have 1 secondary weapon!");
+                                    return;
+                                }
+
+                                pickable.Pick(_secondaryWeaponSlot);
+                                secondaryWeapon = weapon;
+                                WeaponSwitch(3, secondaryWeapon);
                             }
                         }
+                    }
                 }
+                else
+                    _isGunInPickingRange = false;
             }
         }
 
@@ -104,11 +130,21 @@ namespace Assets.Scripts.Character
         {
             float weaponNum = ctx.ReadValue<float>();
 
+            if (weaponNum == 1 && primaryWeapon1 != null)
+                WeaponSwitch(weaponNum, primaryWeapon1);
+            else if (weaponNum == 2 && primaryWeapon2 != null)
+                WeaponSwitch(weaponNum, primaryWeapon2);
+            else if (weaponNum == 3 && secondaryWeapon != null)
+                WeaponSwitch(weaponNum, secondaryWeapon);
+        }
+
+        private void WeaponSwitch(float weaponNum, Weapon weapon)
+        {
             _primaryWeaponSlot1.gameObject.SetActive(weaponNum == 1);
             _primaryWeaponSlot2.gameObject.SetActive(weaponNum == 2);
             _secondaryWeaponSlot.gameObject.SetActive(weaponNum == 3);
 
-            OnWeaponSwitch?.Invoke();
+            OnWeaponSwitch?.Invoke(weapon);
         }
 
         private void HandleSpeedAndDirection()

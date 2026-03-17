@@ -13,10 +13,8 @@ namespace Assets.Scripts
         [Header("Mouse Related Settings")]
         [SerializeField] private float _mouseSensitivity = 40f;
 
-        [Header("Game Input")]
-        [SerializeField] private GameInput _gameInput;
-
         //Non-Serialized Fields
+        private GameInput _gameInput;
         private float _xRotation;
         private float _mouseX;
         private float _mouseY;
@@ -24,34 +22,35 @@ namespace Assets.Scripts
         private void Start()
         {
             Cursor.lockState = CursorLockMode.Locked;
+            _gameInput = GlobalReferences.Instance.gameInput;
         }
 
         private void Update()
         {
             Vector2 pointerPosition = _gameInput.GetPlayerPointerPosition();
-          
+
             if (Keyboard.current.escapeKey.isPressed)
             {
                 Cursor.lockState = CursorLockMode.None;
                 ResetRotation();
-            }    
+            }
 
             if (Mouse.current.leftButton.isPressed)
                 Cursor.lockState = CursorLockMode.Locked;
 
-	    if (pointerPosition.x >= Screen.width / 2 && Application.isMobilePlatform)
-	    {             
+            if (pointerPosition.x >= Screen.width / 2 && Application.isMobilePlatform)
+            {
                 HandleRotation();
             }
             else if (!Application.isMobilePlatform && Cursor.lockState == CursorLockMode.Locked)
             {
-            	HandleRotation();
+                HandleRotation();
             }
             else
             {
                 ResetRotation();
             }
-            
+
             _xRotation -= _mouseY;
             _xRotation = Mathf.Clamp(_xRotation, -65, 65);
 
@@ -59,19 +58,19 @@ namespace Assets.Scripts
             _player.Rotate(Vector3.up * _mouseX);
         }
 
-	private void HandleRotation()
-	{
-	    Vector2 mouseDelta = _gameInput.GetPlayerHeadMovement();
+        private void HandleRotation()
+        {
+            Vector2 mouseDelta = _gameInput.GetPlayerHeadMovement();
             _mouseX = mouseDelta.x * _mouseSensitivity * Time.deltaTime;
             _mouseY = mouseDelta.y * _mouseSensitivity * Time.deltaTime;
         }
 
         private void ResetRotation()
         {
-           _mouseX = 0;
-           _mouseY = 0;
+            _mouseX = 0;
+            _mouseY = 0;
         }
-	
+
         public bool IsRotating() => _mouseX != 0 || _mouseY != 0;
     }
 }

@@ -3,6 +3,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
 using Assets.Scripts.Interfaces;
+using Assets.Scripts.Character;
+using Assets.Scripts;
 
 namespace Assets.Scripts.Weapon_Related
 {
@@ -10,12 +12,11 @@ namespace Assets.Scripts.Weapon_Related
     {
         [Header("Serialized Fields")]
         [SerializeField] public Bullet _bulletPrefab;
-        [SerializeField] public Camera _camera;
-        public WeaponSO weapon;
-        [SerializeField] private GameInput _gameInput;
         [SerializeField] private GameObject _muzzleFlash;
+        public WeaponSO weapon;
 
         [Header("Non-Serialized Fields")]
+        private GameInput _gameInput;
         private Vector3 _bulletDirection;
         public int maxBulletsInMag;
         public int bulletsRemainingInMag;
@@ -28,18 +29,21 @@ namespace Assets.Scripts.Weapon_Related
         private AudioSource _audioSource;
         private ParticleSystem _muzzleFlashEffect;
         private bool _isShooting;
-        public event Action OnShoot;
-        public event Action OnReload;
+        public event Action<Weapon> OnShoot;
+        public event Action<Weapon> OnReload;
         private bool _isPicked;
 
         public void Awake()
         {
-            _gameInput = GameObject.Find("GameInput").GetComponent<GameInput>();
             _audioSource = GetComponent<AudioSource>();
             _muzzleFlashEffect = _muzzleFlash.GetComponent<ParticleSystem>();
             _bulletObjectPool = new ObjectPool<Bullet>(
                 CreateBullet,
-                OnGetFromPool,
+                bullet =>
+                {
+                    if (bullet != null)
+                        bullet.gameObject.SetActive(true);
+                },
                 bullet => bullet.gameObject.SetActive(false),
                 bullet => Destroy(bullet.gameObject),
                 true,
@@ -50,11 +54,10 @@ namespace Assets.Scripts.Weapon_Related
             bulletsRemainingInMag = maxBulletsInMag;
         }
 
-        private void OnGetFromPool(Bullet bullet)
-        {
-            if (bullet != null)
-                bullet.gameObject.SetActive(true);
-        }
+	public void Start()
+	{
+	    _gameInput = GlobalReferences.Instance.gameInput;
+	}
 
         private Bullet CreateBullet()
         {
@@ -66,12 +69,16 @@ namespace Assets.Scripts.Weapon_Related
         protected virtual void Update()
         {
             _isPicked = transform.parent != null;
-//            Ray ray = _camera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0));
-  //          Vector3 aimPoint = Physics.Raycast(ray, out RaycastHit hit, 1000f) ? hit.point : ray.GetPoint(1000f);
-     //       _bulletDirection = (aimPoint - transform.position).normalized;
 
             if (_isPicked)
+            {
+            	Camera camera = GetComponentInParent<Player>().GetComponentInChildren<Camera>();
+                Ray ray = camera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0));
+                Vector3 aimPoint = Physics.Raycast(ray, out RaycastHit hit, 1000f) ? hit.point : ray.GetPoint(1000f);
+                _bulletDirection = (aimPoint - transform.position).normalized;
+
                 HandleShootingAndReload();
+            }
         }
 
         protected void HandleShootingAndReload()
@@ -113,7 +120,7 @@ namespace Assets.Scripts.Weapon_Related
                 bulletRb.velocity = _bulletDirection * weapon.bulletSpeed;
 
             bulletsRemainingInMag--;
-            OnShoot?.Invoke();
+            OnShoot?.Invoke(this);
             PlayEffectsAfterFiring();
         }
 
@@ -122,7 +129,7 @@ namespace Assets.Scripts.Weapon_Related
             while (bulletsRemainingInMag < weapon.maxBulletsInMag)
             {
                 bulletsRemainingInMag++;
-                OnReload?.Invoke();
+                OnReload?.Invoke(this);
                 yield return new WaitForSeconds(weapon.secondsGapInReloading);
             }
 
@@ -135,10 +142,10 @@ namespace Assets.Scripts.Weapon_Related
             _muzzleFlashEffect.Play();
         }
 
-        public void Pick(Transform weaponSlot, WeaponType weaponType)
+        public void Pick(Transform weaponSlot)
         {
             transform.SetParent(weaponSlot);
-            transform.localPosition = Vector3.zero;
+            transform.localPosition = weapon.gunPosition;
             transform.localRotation = Quaternion.Euler(0, 180, 0);
         }
 

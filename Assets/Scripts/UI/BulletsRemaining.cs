@@ -18,41 +18,19 @@ namespace Assets.Scripts.UI
         void Start()
         {
             _text = GetComponent<TextMeshProUGUI>();
-
-            foreach (GameObject weaponObject in _weaponsList)
-            {
-                Weapon weapon = weaponObject.GetComponent<Weapon>();
-                weapon.OnShoot += UpdateTotalAmmo;
-                weapon.OnReload += UpdateTotalAmmo;
-            }
             _player.OnWeaponSwitch += UpdateTotalAmmo;
-
-            UpdateTotalAmmo();
+            _player.OnWeaponShoot += UpdateTotalAmmo;
+            _player.OnWeaponReload += UpdateTotalAmmo;
         }
 
-        private void UpdateTotalAmmo()
+        private void UpdateTotalAmmo(Weapon weapon)
         {
-            foreach (GameObject weaponObject in _weaponsList)
-            {
-                if (weaponObject != null && weaponObject.gameObject.activeInHierarchy)
-                {
-                    Weapon weapon = weaponObject.GetComponent<Weapon>();
-                    _text.text = $"{weapon.bulletsRemainingInMag}/{weapon.maxBulletsInMag}";
-                }
-            }
+            _text.text = $"{weapon.bulletsRemainingInMag}/{weapon.maxBulletsInMag}";
         }
 
         private void OnDestroy()
         {
-            foreach (GameObject weaponObject in _weaponsList)
-            {
-                if (weaponObject != null)
-                {
-                    Weapon weapon = weaponObject.GetComponent<Weapon>();
-                    weapon.OnShoot -= UpdateTotalAmmo;
-                    weapon.OnReload -= UpdateTotalAmmo;
-                }
-            }
+            _player.OnWeaponSwitch -= UpdateTotalAmmo;
         }
     }
 }
