@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Pool;
 using Assets.Scripts.Interfaces;
 using Assets.Scripts.Character;
-using Assets.Scripts;
+using Assets.Scripts.UI;
 
 namespace Assets.Scripts.Weapon_Related
 {
@@ -83,7 +84,7 @@ namespace Assets.Scripts.Weapon_Related
 
         protected void HandleShootingAndReload()
         {
-            if (_gameInput.IsPlayerAttacking() && _reloadCoroutine == null && !_isShooting && bulletsRemainingInMag > 0)
+            if (_gameInput.IsPlayerAttacking() && _reloadCoroutine == null && !_isShooting && bulletsRemainingInMag > 0 && !EventSystem.current.IsPointerOverGameObject())
                 _shootCoroutine ??= StartCoroutine(ShootRoutine());
 
             if (_gameInput.IsPlayerReloading() && bulletsRemainingInMag < weapon.maxBulletsInMag && !_isShooting)

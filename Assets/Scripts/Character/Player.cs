@@ -18,22 +18,15 @@ namespace Assets.Scripts.Character
         [SerializeField] private TextMeshProUGUI _interactTM;
         [SerializeField] private Transform _primaryWeaponSlot1, _primaryWeaponSlot2, _secondaryWeaponSlot;
         [SerializeField] private float _playerSpeed;
-        [SerializeField] private GameObject _pickGunUI;
 
         // Non-Serialized Fields
         private Rigidbody _rb;
-        private bool _isGrounded = true, _isJumping;
+        private bool _isGrounded = true, _isJumping, _isSprinting, _isGunInPickingRange;
         private Vector3 _moveDirection;
         private readonly float _jumpForce = 5f;
-        private bool _isSprinting;
-        private Weapon _weapon;
-        private Weapon primaryWeapon1;
-        private Weapon primaryWeapon2;
-        private Weapon secondaryWeapon;
-        private bool _isGunInPickingRange;
-        public event Action<Weapon> OnWeaponSwitch;
-        public event Action<Weapon> OnWeaponShoot;
-        public event Action<Weapon> OnWeaponReload;
+        private Weapon _weapon, primaryWeapon1, primaryWeapon2, secondaryWeapon;
+        private GameObject _pickupUI, _gameMenuUI;
+        public event Action<Weapon> OnWeaponSwitch, OnWeaponShoot, OnWeaponReload;
         public event Action<GameObject> OnGunInPickingRange;
 
         private void Awake()
@@ -43,6 +36,8 @@ namespace Assets.Scripts.Character
             _gameInput.OnSprint += HandleSprint;
             _gameInput.OnWeaponSwitch += HandleActiveGun;
             _gameInput.OnJump += ctx => _isJumping = _isGrounded;
+            _gameMenuUI = GameObject.Find("GameMenuUI");
+            _pickupUI = GameObject.Find("PickupUI");
         }
 
         private void Update()
@@ -51,7 +46,7 @@ namespace Assets.Scripts.Character
             HandleInteraction();
             HandleItemDrop();
 
-            _pickGunUI.SetActive(_isGunInPickingRange);
+            _pickupUI.SetActive(_isGunInPickingRange);
 
             if (_gameInput.IsPlayerSprinting())
                 _isSprinting = _isSprinting != true;

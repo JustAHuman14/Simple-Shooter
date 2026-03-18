@@ -16,4 +16,5 @@ MonoBehaviour:
   maxBulletsInMag: 30
   secondsGapBetweenBullets: 0.1
   secondsGapInReloading: 0.01
-  bulletSpeed: 900
+  bulletSpeed: 715
+  gunPosition: {x: 0, y: 0, z: 0}

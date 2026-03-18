@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.PostProcessing;
 
 namespace Assets.Scripts
 {
@@ -11,7 +12,7 @@ namespace Assets.Scripts
         [SerializeField] private Transform _playerHead;
 
         [Header("Mouse Related Settings")]
-        [SerializeField] private float _mouseSensitivity = 40f;
+        [Range(1, 100), SerializeField] private float _mouseSensitivity = 40f;
 
         //Non-Serialized Fields
         private GameInput _gameInput;
@@ -23,33 +24,13 @@ namespace Assets.Scripts
         {
             Cursor.lockState = CursorLockMode.Locked;
             _gameInput = GlobalReferences.Instance.gameInput;
+
+            _gameInput.OnExit += ctx => Cursor.lockState = CursorLockMode.None;
         }
 
         private void Update()
         {
-            Vector2 pointerPosition = _gameInput.GetPlayerPointerPosition();
-
-            if (Keyboard.current.escapeKey.isPressed)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                ResetRotation();
-            }
-
-            if (Mouse.current.leftButton.isPressed)
-                Cursor.lockState = CursorLockMode.Locked;
-
-            if (pointerPosition.x >= Screen.width / 2 && Application.isMobilePlatform)
-            {
-                HandleRotation();
-            }
-            else if (!Application.isMobilePlatform && Cursor.lockState == CursorLockMode.Locked)
-            {
-                HandleRotation();
-            }
-            else
-            {
-                ResetRotation();
-            }
+            HandleRotation();
 
             _xRotation -= _mouseY;
             _xRotation = Mathf.Clamp(_xRotation, -65, 65);
