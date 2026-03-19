@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Rendering.PostProcessing;
 
 namespace Assets.Scripts
 {
@@ -12,14 +10,14 @@ namespace Assets.Scripts
         [SerializeField] private Transform _playerHead;
 
         [Header("Mouse Related Settings")]
-        [Range(1, 100), SerializeField] private float _mouseSensitivity = 40f;
+        [SerializeField] private float _mouseSensitivity = 10f;
 
         //Non-Serialized Fields
         private GameInput _gameInput;
         private float _xRotation;
         private float _mouseX;
         private float _mouseY;
-
+	
         private void Start()
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -30,6 +28,7 @@ namespace Assets.Scripts
 
         private void Update()
         {
+            _mouseSensitivity = GameManager.mouseSensitivity;
             HandleRotation();
 
             _xRotation -= _mouseY;

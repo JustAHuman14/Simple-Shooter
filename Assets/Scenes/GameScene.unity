@@ -245,10 +245,10 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1149259406}
   - {fileID: 1375310620}
   - {fileID: 702511881}
   - {fileID: 1561343256}
+  - {fileID: 1149259406}
   m_Father: {fileID: 953701710}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -272,6 +272,7 @@ MonoBehaviour:
   _gameInput: {fileID: 918319179}
   _mainMenuBtn: {fileID: 702511883}
   _resumeBtn: {fileID: 1561343258}
+  _mouseSensitivitySlider: {fileID: 1729128281}
 --- !u!114 &93838466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1033,7 +1034,7 @@ RectTransform:
   m_Children:
   - {fileID: 1778201739}
   m_Father: {fileID: 93838464}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -2407,7 +2408,7 @@ RectTransform:
   - {fileID: 1729128280}
   - {fileID: 2049032930}
   m_Father: {fileID: 93838464}
-  m_RootOrder: 0
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -6389,7 +6390,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 93838464}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -7183,7 +7184,7 @@ RectTransform:
   m_Children:
   - {fileID: 1870855052}
   m_Father: {fileID: 93838464}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
