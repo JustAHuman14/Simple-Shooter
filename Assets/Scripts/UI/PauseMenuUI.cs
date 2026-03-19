@@ -2,14 +2,15 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.UI
 {
     public class PauseMenuUI : MonoBehaviour
     {
         [SerializeField] private GameInput _gameInput;
-        [SerializeField] private Button _yesBtn;
-        [SerializeField] private Button _noBtn;
+        [SerializeField] private Button _mainMenuBtn;
+        [SerializeField] private Button _resumeBtn;
 
         private void Start()
         {
@@ -20,8 +21,8 @@ namespace Assets.Scripts.UI
                 Time.timeScale = 0;
             };
 
-            _yesBtn.onClick.AddListener(() => Application.Quit());
-            _noBtn.onClick.AddListener(() => GameResume());
+            _mainMenuBtn.onClick.AddListener(() => SceneManager.LoadScene(0));
+            _resumeBtn.onClick.AddListener(() => GameResume());
         }
 
         private void GameResume()
