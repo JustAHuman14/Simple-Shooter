@@ -8,9 +8,6 @@ namespace Assets.Scripts
     {
         // Private Fields
         private PlayerInputActions _playerInput;
-        private Vector2 _moveDirection;
-        private Vector2 _playerHeadMovement;
-        private Vector2 _playerPointerPosition;
 
         // Public Fields
         public event Action<InputAction.CallbackContext> OnWeaponSwitch;
@@ -42,10 +39,10 @@ namespace Assets.Scripts
         public bool IsPlayerSprinting() => _playerInput.Player.Sprint.IsPressed();
         public bool IsPlayerReloading() => _playerInput.Player.Reload.IsPressed();
         public bool IsPlayerPicking() => _playerInput.Player.Pickup.IsPressed();
-        public bool IsPlayerDropping() => _playerInput.Player.Drop.IsPressed();
+        public bool IsPlayerDroppingWeapon() => _playerInput.Player.WeaponDrop.IsPressed();
 
-        public Vector2 GetPlayerMovementVector() => _moveDirection = _playerInput.Player.Move.ReadValue<Vector2>();
-        public Vector2 GetPlayerHeadMovement() => _playerHeadMovement = _playerInput.Player.HeadRotate.ReadValue<Vector2>();
-        public Vector2 GetPlayerPointerPosition() => _playerPointerPosition = _playerInput.Player.PointerPosition.ReadValue<Vector2>();
+        public Vector2 GetPlayerMovementVector() => _playerInput.Player.Move.ReadValue<Vector2>();
+        public Vector2 GetPlayerHeadMovement() => _playerInput.Player.HeadRotate.ReadValue<Vector2>();
+        public Vector2 GetPlayerPointerPosition() => _playerInput.Player.PointerPosition.ReadValue<Vector2>();
     }
 }

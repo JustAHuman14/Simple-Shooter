@@ -4,14 +4,12 @@ using TMPro;
 using Assets.Scripts.Interfaces;
 using UnityEngine.InputSystem;
 using Assets.Scripts.Weapon_Related;
-using System.Diagnostics;
 
 namespace Assets.Scripts.Character
 {
     public class Player : MonoBehaviour, ICharacter
     {
         // Serialized Fields
-        [SerializeField] private GameInput _gameInput;
         [SerializeField] private LayerMask _groundLayerMask, _interactableLayerMask;
         [SerializeField] private Camera _playerCamera;
         [SerializeField] private float _groundValue = 1f, _groundRadius = 0.4f, _interactRadius = 2f;
@@ -20,6 +18,7 @@ namespace Assets.Scripts.Character
         [SerializeField] private float _playerSpeed;
 
         // Non-Serialized Fields
+        private GameInput _gameInput;
         private Rigidbody _rb;
         private bool _isGrounded = true, _isJumping, _isSprinting, _isGunInPickingRange;
         private Vector3 _moveDirection;
@@ -33,11 +32,16 @@ namespace Assets.Scripts.Character
         {
             _rb = GetComponent<Rigidbody>();
             _rb.freezeRotation = true;
+            _gameMenuUI = GameObject.Find("GameMenuUI");
+            _pickupUI = GameObject.Find("PickupUI");
+        }
+
+        private void Start()
+        {
+            _gameInput = GlobalReferences.Instance.gameInput;
             _gameInput.OnSprint += HandleSprint;
             _gameInput.OnWeaponSwitch += HandleActiveGun;
             _gameInput.OnJump += ctx => _isJumping = _isGrounded;
-            _gameMenuUI = GameObject.Find("GameMenuUI");
-            _pickupUI = GameObject.Find("PickupUI");
         }
 
         private void Update()
@@ -60,7 +64,7 @@ namespace Assets.Scripts.Character
 
         private void HandleSprint(InputAction.CallbackContext context) => _isSprinting = _isSprinting != true;
 
-        private void HandleItemDrop(){}
+        private void HandleItemDrop() { }
 
         private void HandleInteraction()
         {
@@ -82,7 +86,6 @@ namespace Assets.Scripts.Character
                         {
                             weapon.OnShoot += weapon => OnWeaponShoot?.Invoke(weapon);
                             weapon.OnReload += weapon => OnWeaponReload?.Invoke(weapon);
-
 
                             if (weapon.weapon.weaponType == WeaponType.Primary)
                             {

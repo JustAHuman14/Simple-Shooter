@@ -10,19 +10,19 @@ namespace Assets.Scripts
         [SerializeField] private Transform _playerHead;
 
         [Header("Mouse Related Settings")]
-        [SerializeField] private float _mouseSensitivity = 10f;
+        [SerializeField] private float _mouseSensitivity;
 
         //Non-Serialized Fields
         private GameInput _gameInput;
         private float _xRotation;
         private float _mouseX;
         private float _mouseY;
-	
+
         private void Start()
         {
             Cursor.lockState = CursorLockMode.Locked;
             _gameInput = GlobalReferences.Instance.gameInput;
-
+            _mouseSensitivity = GameManager.mouseSensitivity;
             _gameInput.OnExit += ctx => Cursor.lockState = CursorLockMode.None;
         }
 

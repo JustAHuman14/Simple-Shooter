@@ -109,7 +109,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Drop"",
+                    ""name"": ""WeaponDrop"",
                     ""type"": ""Button"",
                     ""id"": ""0cf00dfa-1bf2-4cf5-8443-0e66463faa10"",
                     ""expectedControlType"": ""Button"",
@@ -410,7 +410,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Drop"",
+                    ""action"": ""WeaponDrop"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -441,7 +441,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_HeadRotate = m_Player.FindAction("HeadRotate", throwIfNotFound: true);
         m_Player_PointerPosition = m_Player.FindAction("PointerPosition", throwIfNotFound: true);
         m_Player_Pickup = m_Player.FindAction("Pickup", throwIfNotFound: true);
-        m_Player_Drop = m_Player.FindAction("Drop", throwIfNotFound: true);
+        m_Player_WeaponDrop = m_Player.FindAction("WeaponDrop", throwIfNotFound: true);
         m_Player_Exit = m_Player.FindAction("Exit", throwIfNotFound: true);
     }
 
@@ -513,7 +513,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_HeadRotate;
     private readonly InputAction m_Player_PointerPosition;
     private readonly InputAction m_Player_Pickup;
-    private readonly InputAction m_Player_Drop;
+    private readonly InputAction m_Player_WeaponDrop;
     private readonly InputAction m_Player_Exit;
     public struct PlayerActions
     {
@@ -528,7 +528,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @HeadRotate => m_Wrapper.m_Player_HeadRotate;
         public InputAction @PointerPosition => m_Wrapper.m_Player_PointerPosition;
         public InputAction @Pickup => m_Wrapper.m_Player_Pickup;
-        public InputAction @Drop => m_Wrapper.m_Player_Drop;
+        public InputAction @WeaponDrop => m_Wrapper.m_Player_WeaponDrop;
         public InputAction @Exit => m_Wrapper.m_Player_Exit;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
@@ -566,9 +566,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Pickup.started += instance.OnPickup;
             @Pickup.performed += instance.OnPickup;
             @Pickup.canceled += instance.OnPickup;
-            @Drop.started += instance.OnDrop;
-            @Drop.performed += instance.OnDrop;
-            @Drop.canceled += instance.OnDrop;
+            @WeaponDrop.started += instance.OnWeaponDrop;
+            @WeaponDrop.performed += instance.OnWeaponDrop;
+            @WeaponDrop.canceled += instance.OnWeaponDrop;
             @Exit.started += instance.OnExit;
             @Exit.performed += instance.OnExit;
             @Exit.canceled += instance.OnExit;
@@ -603,9 +603,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Pickup.started -= instance.OnPickup;
             @Pickup.performed -= instance.OnPickup;
             @Pickup.canceled -= instance.OnPickup;
-            @Drop.started -= instance.OnDrop;
-            @Drop.performed -= instance.OnDrop;
-            @Drop.canceled -= instance.OnDrop;
+            @WeaponDrop.started -= instance.OnWeaponDrop;
+            @WeaponDrop.performed -= instance.OnWeaponDrop;
+            @WeaponDrop.canceled -= instance.OnWeaponDrop;
             @Exit.started -= instance.OnExit;
             @Exit.performed -= instance.OnExit;
             @Exit.canceled -= instance.OnExit;
@@ -637,7 +637,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnHeadRotate(InputAction.CallbackContext context);
         void OnPointerPosition(InputAction.CallbackContext context);
         void OnPickup(InputAction.CallbackContext context);
-        void OnDrop(InputAction.CallbackContext context);
+        void OnWeaponDrop(InputAction.CallbackContext context);
         void OnExit(InputAction.CallbackContext context);
     }
 }

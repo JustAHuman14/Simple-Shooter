@@ -87,7 +87,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Drop",
+                    "name": "WeaponDrop",
                     "type": "Button",
                     "id": "0cf00dfa-1bf2-4cf5-8443-0e66463faa10",
                     "expectedControlType": "Button",
@@ -388,7 +388,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Drop",
+                    "action": "WeaponDrop",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

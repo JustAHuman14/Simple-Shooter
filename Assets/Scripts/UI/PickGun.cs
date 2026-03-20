@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Assets.Scripts.Character;
-using Assets.Scripts.Weapon_Related;
 
 namespace Assets.Scripts.UI
 {

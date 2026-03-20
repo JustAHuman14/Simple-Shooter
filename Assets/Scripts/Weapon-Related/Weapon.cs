@@ -5,7 +5,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.Pool;
 using Assets.Scripts.Interfaces;
 using Assets.Scripts.Character;
-using Assets.Scripts.UI;
 
 namespace Assets.Scripts.Weapon_Related
 {
@@ -14,6 +13,8 @@ namespace Assets.Scripts.Weapon_Related
         [Header("Serialized Fields")]
         [SerializeField] public Bullet _bulletPrefab;
         [SerializeField] private GameObject _muzzleFlash;
+        [SerializeField] private float _dropForce;
+        [SerializeField] private Transform _bulletSpawn;
         public WeaponSO weapon;
 
         [Header("Non-Serialized Fields")]
@@ -26,18 +27,21 @@ namespace Assets.Scripts.Weapon_Related
         private readonly int maxSize = 2000;
         private Coroutine _shootCoroutine;
         private Coroutine _reloadCoroutine;
-        [SerializeField] private Transform _bulletSpawn;
         private AudioSource _audioSource;
         private ParticleSystem _muzzleFlashEffect;
         private bool _isShooting;
         public event Action<Weapon> OnShoot;
         public event Action<Weapon> OnReload;
         private bool _isPicked;
+        private Rigidbody _rb;
+        private Collider _collider;
 
         public void Awake()
         {
             _audioSource = GetComponent<AudioSource>();
             _muzzleFlashEffect = _muzzleFlash.GetComponent<ParticleSystem>();
+            _rb = GetComponent<Rigidbody>();
+            _collider = GetComponent<Collider>();
             _bulletObjectPool = new ObjectPool<Bullet>(
                 CreateBullet,
                 bullet =>
@@ -55,10 +59,10 @@ namespace Assets.Scripts.Weapon_Related
             bulletsRemainingInMag = maxBulletsInMag;
         }
 
-	public void Start()
-	{
-	    _gameInput = GlobalReferences.Instance.gameInput;
-	}
+        public void Start()
+        {
+            _gameInput = GlobalReferences.Instance.gameInput;
+        }
 
         private Bullet CreateBullet()
         {
@@ -67,13 +71,24 @@ namespace Assets.Scripts.Weapon_Related
             return bulletInstance;
         }
 
-        protected virtual void Update()
+        private void Update()
         {
             _isPicked = transform.parent != null;
+            _rb.isKinematic = _isPicked;
+            _collider.isTrigger = _isPicked;
+
+            if (_isPicked && _gameInput.IsPlayerDroppingWeapon())
+            {
+                transform.parent = null;
+                _isPicked = false;
+                _rb.isKinematic = false;
+                _collider.isTrigger = false;
+                _rb.AddForce(_bulletDirection * _dropForce, ForceMode.Impulse);
+            }
 
             if (_isPicked)
             {
-            	Camera camera = GetComponentInParent<Player>().GetComponentInChildren<Camera>();
+                Camera camera = GetComponentInParent<Player>().GetComponentInChildren<Camera>();
                 Ray ray = camera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0));
                 Vector3 aimPoint = Physics.Raycast(ray, out RaycastHit hit, 1000f) ? hit.point : ray.GetPoint(1000f);
                 _bulletDirection = (aimPoint - transform.position).normalized;
