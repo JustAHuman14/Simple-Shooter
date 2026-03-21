@@ -35,9 +35,13 @@ namespace Assets.Scripts.Weapon_Related
         private bool _isPicked;
         private Rigidbody _rb;
         private Collider _collider;
+        private Rigidbody _playerRb;
+        private Camera _playerCamera;
 
-        public void Awake()
+        private void Awake()
         {
+            _dropForce = 3;
+            _playerRb = GameObject.Find(nameof(Player)).GetComponent<Rigidbody>();
             _audioSource = GetComponent<AudioSource>();
             _muzzleFlashEffect = _muzzleFlash.GetComponent<ParticleSystem>();
             _rb = GetComponent<Rigidbody>();
@@ -59,7 +63,7 @@ namespace Assets.Scripts.Weapon_Related
             bulletsRemainingInMag = maxBulletsInMag;
         }
 
-        public void Start()
+        private void Start()
         {
             _gameInput = GlobalReferences.Instance.gameInput;
         }
@@ -73,31 +77,27 @@ namespace Assets.Scripts.Weapon_Related
 
         private void Update()
         {
-            _isPicked = transform.parent != null;
-            _rb.isKinematic = _isPicked;
-            _collider.isTrigger = _isPicked;
-
             if (_isPicked && _gameInput.IsPlayerDroppingWeapon())
             {
+                transform.localRotation = Quaternion.Euler(10, 90, 0);
                 transform.parent = null;
                 _isPicked = false;
                 _rb.isKinematic = false;
                 _collider.isTrigger = false;
+                _rb.velocity = _playerRb.velocity;
                 _rb.AddForce(_bulletDirection * _dropForce, ForceMode.Impulse);
             }
 
             if (_isPicked)
             {
-                Camera camera = GetComponentInParent<Player>().GetComponentInChildren<Camera>();
-                Ray ray = camera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0));
+                Ray ray = _playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0));
                 Vector3 aimPoint = Physics.Raycast(ray, out RaycastHit hit, 1000f) ? hit.point : ray.GetPoint(1000f);
                 _bulletDirection = (aimPoint - transform.position).normalized;
-
                 HandleShootingAndReload();
             }
         }
 
-        protected void HandleShootingAndReload()
+        private void HandleShootingAndReload()
         {
             if (_gameInput.IsPlayerAttacking() && _reloadCoroutine == null && !_isShooting && bulletsRemainingInMag > 0 && !EventSystem.current.IsPointerOverGameObject())
                 _shootCoroutine ??= StartCoroutine(ShootRoutine());
@@ -163,6 +163,10 @@ namespace Assets.Scripts.Weapon_Related
             transform.SetParent(weaponSlot);
             transform.localPosition = weapon.gunPosition;
             transform.localRotation = Quaternion.Euler(0, 180, 0);
+            _isPicked = true;
+            _rb.isKinematic = true;
+            _collider.isTrigger = true;
+            _playerCamera = GetComponentInParent<Player>().GetComponentInChildren<Camera>();
         }
 
         private void OnDisable()

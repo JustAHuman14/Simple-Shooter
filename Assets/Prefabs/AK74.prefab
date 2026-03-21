@@ -139,10 +139,11 @@ MonoBehaviour:
   _bulletPrefab: {fileID: 598334474757359819, guid: bc49c32d76f15b998a02343c0c6658cd,
     type: 3}
   _muzzleFlash: {fileID: 6068823784566730142}
+  _dropForce: 0
+  _bulletSpawn: {fileID: 6068823784054724835}
   weapon: {fileID: 11400000, guid: 1eb26afa9c3dd0c3dac66191a5658f9a, type: 2}
   maxBulletsInMag: 0
   bulletsRemainingInMag: 0
-  _bulletSpawn: {fileID: 6068823784054724835}
 --- !u!82 &6068823783255202825
 AudioSource:
   m_ObjectHideFlags: 0

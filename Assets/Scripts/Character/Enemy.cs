@@ -19,7 +19,6 @@ namespace Assets.Scripts.Character
         public float maxHealth = 200f;
         public float currentHealth;
         public event Action OnDamage;
-        public event Action OnDeath;
         private NavMeshAgent _agent;
         private bool _isPlayerInSightRange;
         private bool _isPlayerInAttackRange;
@@ -57,7 +56,7 @@ namespace Assets.Scripts.Character
             if (currentHealth <= 0)
             {
                 currentHealth = 0;
-                OnDeath?.Invoke();
+                _agent = null;
                 Destroy(gameObject);
             }
 

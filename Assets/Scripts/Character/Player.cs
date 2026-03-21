@@ -16,6 +16,7 @@ namespace Assets.Scripts.Character
         [SerializeField] private TextMeshProUGUI _interactTM;
         [SerializeField] private Transform _primaryWeaponSlot1, _primaryWeaponSlot2, _secondaryWeaponSlot;
         [SerializeField] private float _playerSpeed;
+        [SerializeField] private Enemy _enemy;
 
         // Non-Serialized Fields
         private GameInput _gameInput;
@@ -54,6 +55,17 @@ namespace Assets.Scripts.Character
 
             if (_gameInput.IsPlayerSprinting())
                 _isSprinting = _isSprinting != true;
+
+            if (_gameInput.IsPlayerSpawningEnemy())
+            {
+                Ray ray = _playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0));
+                if (Physics.Raycast(ray, out RaycastHit hit, 20f, _groundLayerMask))
+                {
+                    Vector3 spawnPoint = hit.point;
+                    Enemy enemy = Instantiate(_enemy, spawnPoint, Quaternion.identity);
+                    enemy.transform.LookAt(transform);
+                }
+            }
         }
 
         private void FixedUpdate()

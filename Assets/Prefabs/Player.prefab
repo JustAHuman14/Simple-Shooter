@@ -48,7 +48,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43de7ff0ff90a1a63994b06b9dcb4865, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameInput: {fileID: 0}
   _groundLayerMask:
     serializedVersion: 2
     m_Bits: 8
@@ -64,6 +63,7 @@ MonoBehaviour:
   _primaryWeaponSlot2: {fileID: 3298872855361621157}
   _secondaryWeaponSlot: {fileID: 3298872855746873364}
   _playerSpeed: 0
+  _enemy: {fileID: 3529775451546520615, guid: 797a63aefc2555ca089a91943e63cf1b, type: 3}
 --- !u!54 &3298872854503315577
 Rigidbody:
   m_ObjectHideFlags: 0
