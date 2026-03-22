@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6068823782975984948}
   - component: {fileID: 6068823782975984946}
   - component: {fileID: 6068823782975984949}
+  - component: {fileID: 1071954319631664567}
   m_Layer: 7
   m_Name: Mag
   m_TagString: Untagged
@@ -83,6 +84,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &1071954319631664567
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6068823782975984951}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.024083955, y: 0.19363748, z: 0.123791195}
+  m_Center: {x: -0.00000001303748, y: -0.08950914, z: -0.06699869}
 --- !u!1 &6068823783255202827
 GameObject:
   m_ObjectHideFlags: 0
@@ -114,7 +128,7 @@ Transform:
   m_GameObject: {fileID: 6068823783255202827}
   m_LocalRotation: {x: 0.3993993, y: -0.3993993, z: -0.5835068, w: 0.5835068}
   m_LocalPosition: {x: 2.9673312, y: 1.530267, z: -3.7601752}
-  m_LocalScale: {x: 2, y: 2.0000002, z: 1.9}
+  m_LocalScale: {x: 1.9999999, y: 2.0000002, z: 1.9}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6068823784613785957}

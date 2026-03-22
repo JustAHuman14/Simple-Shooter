@@ -17,4 +17,4 @@ MonoBehaviour:
   secondsGapBetweenBullets: 0.1
   secondsGapInReloading: 0.01
   bulletSpeed: 400
-  gunPosition: {x: 0.05, y: 0.03, z: 0}
+  gunPosition: {x: 0.05, y: 0.05, z: 0}

@@ -13,7 +13,6 @@ namespace Assets.Scripts.Character
         [SerializeField] private LayerMask _groundLayerMask, _interactableLayerMask;
         [SerializeField] private Camera _playerCamera;
         [SerializeField] private float _groundValue = 1f, _groundRadius = 0.4f, _interactRadius = 2f;
-        [SerializeField] private TextMeshProUGUI _interactTM;
         [SerializeField] private Transform _primaryWeaponSlot1, _primaryWeaponSlot2, _secondaryWeaponSlot;
         [SerializeField] private float _playerSpeed;
         [SerializeField] private Enemy _enemy;
@@ -25,7 +24,9 @@ namespace Assets.Scripts.Character
         private Vector3 _moveDirection;
         private readonly float _jumpForce = 5f;
         private Weapon _weapon, primaryWeapon1, primaryWeapon2, secondaryWeapon;
-        private GameObject _pickupUI, _gameMenuUI;
+        private GameObject _pickupUI;
+        private bool _isPickingWeapon;
+
         public event Action<Weapon> OnWeaponSwitch, OnWeaponShoot, OnWeaponReload;
         public event Action<GameObject> OnGunInPickingRange;
 
@@ -33,7 +34,6 @@ namespace Assets.Scripts.Character
         {
             _rb = GetComponent<Rigidbody>();
             _rb.freezeRotation = true;
-            _gameMenuUI = GameObject.Find("GameMenuUI");
             _pickupUI = GameObject.Find("PickupUI");
         }
 
@@ -43,29 +43,27 @@ namespace Assets.Scripts.Character
             _gameInput.OnSprint += HandleSprint;
             _gameInput.OnWeaponSwitch += HandleActiveGun;
             _gameInput.OnJump += ctx => _isJumping = _isGrounded;
+            _gameInput.OnSpawnEnemy += SpawnEnemy;
+            _gameInput.OnWeaponPick += ctx => _isPickingWeapon = true;
+        }
+
+        private void SpawnEnemy(InputAction.CallbackContext context)
+        {
+            Ray ray = _playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0));
+            if (Physics.Raycast(ray, out RaycastHit hit, 20f, _groundLayerMask))
+            {
+                Vector3 spawnPoint = hit.point;
+                Enemy enemy = Instantiate(_enemy, spawnPoint, Quaternion.identity);
+                enemy.transform.LookAt(transform);
+            }
         }
 
         private void Update()
         {
             HandleSpeedAndDirection();
             HandleInteraction();
-            HandleItemDrop();
 
             _pickupUI.SetActive(_isGunInPickingRange);
-
-            if (_gameInput.IsPlayerSprinting())
-                _isSprinting = _isSprinting != true;
-
-            if (_gameInput.IsPlayerSpawningEnemy())
-            {
-                Ray ray = _playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0));
-                if (Physics.Raycast(ray, out RaycastHit hit, 20f, _groundLayerMask))
-                {
-                    Vector3 spawnPoint = hit.point;
-                    Enemy enemy = Instantiate(_enemy, spawnPoint, Quaternion.identity);
-                    enemy.transform.LookAt(transform);
-                }
-            }
         }
 
         private void FixedUpdate()
@@ -75,8 +73,6 @@ namespace Assets.Scripts.Character
         }
 
         private void HandleSprint(InputAction.CallbackContext context) => _isSprinting = _isSprinting != true;
-
-        private void HandleItemDrop() { }
 
         private void HandleInteraction()
         {
@@ -92,7 +88,7 @@ namespace Assets.Scripts.Character
                     OnGunInPickingRange?.Invoke(hit.collider.gameObject);
                     _isGunInPickingRange = true;
 
-                    if (_gameInput.IsPlayerPicking())
+                    if (_isPickingWeapon)
                     {
                         if (hit.collider.TryGetComponent(out Weapon weapon))
                         {
@@ -106,12 +102,14 @@ namespace Assets.Scripts.Character
                                     pickable.Pick(_primaryWeaponSlot1);
                                     primaryWeapon1 = weapon;
                                     WeaponSwitch(1, primaryWeapon1);
+                                    _isPickingWeapon = false;
                                 }
                                 else if (_primaryWeaponSlot1.childCount == 1)
                                 {
                                     pickable.Pick(_primaryWeaponSlot2);
                                     primaryWeapon2 = weapon;
                                     WeaponSwitch(2, primaryWeapon2);
+                                    _isPickingWeapon = false;
                                 }
                                 else
                                     print("You can only have 2 primary weapons!");
@@ -127,12 +125,21 @@ namespace Assets.Scripts.Character
                                 pickable.Pick(_secondaryWeaponSlot);
                                 secondaryWeapon = weapon;
                                 WeaponSwitch(3, secondaryWeapon);
+                                _isPickingWeapon = false;
                             }
                         }
                     }
                 }
                 else
+                {
                     _isGunInPickingRange = false;
+                    _isPickingWeapon = false;
+                }
+            }
+            else
+            {
+                _isGunInPickingRange = false;
+                _isPickingWeapon = false;
             }
         }
 
@@ -159,9 +166,6 @@ namespace Assets.Scripts.Character
 
         private void HandleSpeedAndDirection()
         {
-            if (_gameInput.IsPlayerSprinting())
-                _isSprinting = _isSprinting != true;
-
             _playerSpeed = _isSprinting ? 10 : 6;
             _moveDirection = _gameInput.GetPlayerMovementVector();
             _moveDirection = transform.forward * _moveDirection.y + transform.right * _moveDirection.x;

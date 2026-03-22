@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 750981002336512099}
   - component: {fileID: 750981002336512097}
   - component: {fileID: 750981002336512098}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Hammer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 750981002711994134}
   - component: {fileID: 750981002711994132}
   - component: {fileID: 750981002711994133}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4942,7 +4942,7 @@ GameObject:
   - component: {fileID: 750981003227253617}
   - component: {fileID: 750981003227253623}
   - component: {fileID: 750981003227253616}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Slide
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5025,7 +5025,7 @@ GameObject:
   - component: {fileID: 750981003279070442}
   - component: {fileID: 750981003279070440}
   - component: {fileID: 750981003279070441}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Magazin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5112,7 +5112,7 @@ GameObject:
   - component: {fileID: 750981003400420637}
   - component: {fileID: 750981003400420639}
   - component: {fileID: 2923958534100003132}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: M1911
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -5154,10 +5154,11 @@ MonoBehaviour:
   _bulletPrefab: {fileID: 598334474757359819, guid: bc49c32d76f15b998a02343c0c6658cd,
     type: 3}
   _muzzleFlash: {fileID: 750981002794904924}
+  _dropForce: 0
+  _bulletSpawn: {fileID: 750981003576752361}
   weapon: {fileID: 11400000, guid: 2292f450cffc6e97e940688611f9a158, type: 2}
   maxBulletsInMag: 0
   bulletsRemainingInMag: 0
-  _bulletSpawn: {fileID: 750981003576752361}
 --- !u!82 &750981003400420638
 AudioSource:
   m_ObjectHideFlags: 0

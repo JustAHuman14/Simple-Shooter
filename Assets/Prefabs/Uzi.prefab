@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4839094258612180595}
   - component: {fileID: 4854692569479014735}
   - component: {fileID: 4862928384177424787}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 75777090420013466}
   - component: {fileID: 503126873284267876}
   - component: {fileID: 834170896263153998}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Uzi
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -140,10 +140,11 @@ MonoBehaviour:
   _bulletPrefab: {fileID: 598334474757359819, guid: bc49c32d76f15b998a02343c0c6658cd,
     type: 3}
   _muzzleFlash: {fileID: 8905183022848476365}
+  _dropForce: 0
+  _bulletSpawn: {fileID: 242324165383707115}
   weapon: {fileID: 11400000, guid: 08c691d670341b01485bda4210998c04, type: 2}
   maxBulletsInMag: 0
   bulletsRemainingInMag: 0
-  _bulletSpawn: {fileID: 242324165383707115}
 --- !u!33 &4850821088887849713
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -330,7 +331,8 @@ GameObject:
   - component: {fileID: 4839036526505048891}
   - component: {fileID: 4854495076349193325}
   - component: {fileID: 4862712971945788761}
-  m_Layer: 0
+  - component: {fileID: 6788710500075032716}
+  m_Layer: 7
   m_Name: Magazin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -402,6 +404,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &6788710500075032716
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4840418898420086031}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.0139213065, y: 0.16148876, z: 0.027281273}
+  m_Center: {x: 0.0026026065, y: -0.07032342, z: -0.0021501384}
 --- !u!1 &4840420865522216599
 GameObject:
   m_ObjectHideFlags: 0
@@ -413,7 +428,7 @@ GameObject:
   - component: {fileID: 4838941336899728925}
   - component: {fileID: 4854721552839569689}
   - component: {fileID: 4861689242711516979}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bolt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -496,7 +511,7 @@ GameObject:
   - component: {fileID: 4843918760650622415}
   - component: {fileID: 4850881063470450611}
   - component: {fileID: 4862585217042795755}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Stock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -580,7 +595,7 @@ GameObject:
   - component: {fileID: 4838724220566031707}
   - component: {fileID: 4854586499333533041}
   - component: {fileID: 4862506420508940235}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Stock_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -661,7 +676,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 242324165383707115}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BulletSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -695,7 +710,7 @@ GameObject:
   - component: {fileID: 3426572410370269405}
   - component: {fileID: 8278975521140852054}
   - component: {fileID: 8936105970064718891}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MuzzleFlash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
