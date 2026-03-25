@@ -13,6 +13,7 @@ namespace Assets.Scripts.UI
 
         private void Start()
         {
+            _mouseSensitivitySlider.value = PlayerPrefs.GetFloat("mouseSensitivity");
             _gameInput = GlobalReferences.Instance.gameInput;
             gameObject.SetActive(false);
             _gameInput.OnExit += ctx =>
@@ -23,6 +24,7 @@ namespace Assets.Scripts.UI
 
             _mainMenuBtn.onClick.AddListener(() =>
             {
+                PlayerPrefs.SetFloat("mouseSensitivity", GameManager.mouseSensitivity);
                 SceneManager.LoadScene(0);
                 Time.timeScale = 1;
             });

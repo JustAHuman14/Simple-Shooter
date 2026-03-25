@@ -35,6 +35,7 @@ namespace Assets.Scripts.Character
             _rb = GetComponent<Rigidbody>();
             _rb.freezeRotation = true;
             _pickupUI = GameObject.Find("PickupUI");
+            GameManager.mouseSensitivity = PlayerPrefs.GetFloat("mouseSensitivity");
         }
 
         private void Start()

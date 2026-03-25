@@ -15,7 +15,7 @@ namespace Assets.Scripts.Weapon_Related
         public int maxBulletsInMag;
         public float secondsGapBetweenBullets;
         public float secondsGapInReloading;
-        public int bulletSpeed;
+        public float bulletRange;
         public Vector3 gunPosition;
     }
 }

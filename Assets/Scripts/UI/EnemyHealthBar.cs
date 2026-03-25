@@ -15,14 +15,13 @@ namespace Assets.Scripts.UI
 
         private void Awake()
         {
-            _enemy.OnDamage += UpdateEnemyHealth;
-
-            UpdateEnemyHealth();
+            _playerPOV = GameObject.Find("PlayerPOV").transform;
         }
 
         private void Start()
         {
-            _playerPOV = GameObject.Find("PlayerPOV").transform;
+            _enemy.OnDamage += UpdateEnemyHealth;
+            UpdateEnemyHealth();
         }
 
         private void UpdateEnemyHealth()

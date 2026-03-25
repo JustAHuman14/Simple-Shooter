@@ -25,22 +25,21 @@ namespace Assets.Scripts.Character
         private Transform _player;
         private readonly float _colorChangedAfterDamageSeconds = 0.05f;
 
-        private void Awake() => _agent = GetComponent<NavMeshAgent>();
-
-        private void Start() => currentHealth = maxHealth;
+        private void Awake()
+        {
+            _agent = GetComponent<NavMeshAgent>();
+            _player = GameObject.Find(nameof(Player)).transform;
+            currentHealth = maxHealth;
+        }
 
         private void Update()
         {
-            HandleDamage();
-
-            _player = GameObject.Find(nameof(Player)).transform;
-
             _isPlayerInSightRange = Physics.CheckSphere(transform.position, _sightRange, _playerLayerMask);
             _isPlayerInAttackRange = Physics.CheckSphere(transform.position, _attackRange, _playerLayerMask);
 
             if (_isPlayerInSightRange && !_isPlayerInAttackRange)
                 ChasePlayer();
-            else if (_isPlayerInAttackRange && _isPlayerInAttackRange)
+            else if (_isPlayerInAttackRange)
                 AttackPlayer();
         }
 
@@ -49,41 +48,34 @@ namespace Assets.Scripts.Character
             _agent.SetDestination(transform.position);
         }
 
+        public void Damage(string bodyPartCollided)
+        {
+            switch (bodyPartCollided)
+            {
+                case "EnemyHead":
+                    TakeDamage(20, _enemyHeadMeshRenderer);
+                    break;
+                case "EnemyTorso":
+                    TakeDamage(10, _enemyTorsoMeshRenderer);
+                    break;
+            }
+        }
+
         private void ChasePlayer() => _agent?.SetDestination(_player.position);
 
-        private void HandleDamage()
+        private void TakeDamage(int damage, MeshRenderer _enemyMeshRenderer)
         {
+            currentHealth -= damage;
+            OnDamage?.Invoke();
+
             if (currentHealth <= 0)
             {
                 currentHealth = 0;
                 _agent = null;
                 Destroy(gameObject);
+                return;
             }
 
-            OnDamage?.Invoke();
-        }
-
-        private void OnCollisionEnter(Collision collision)
-        {
-            if (collision.gameObject.name == "Bullet(Clone)")
-            {
-                string bodyPartCollided = collision.contacts[0].thisCollider.name;
-
-                switch (bodyPartCollided)
-                {
-                    case "EnemyHead":
-                        TakeDamage(20, _enemyHeadMeshRenderer);
-                        break;
-                    case "EnemyTorso":
-                        TakeDamage(10, _enemyTorsoMeshRenderer);
-                        break;
-                }
-            }
-        }
-
-        private void TakeDamage(int damage, MeshRenderer _enemyMeshRenderer)
-        {
-            currentHealth -= damage;
             StartCoroutine(PlayerDamagedRoutine(_enemyMeshRenderer));
         }
 

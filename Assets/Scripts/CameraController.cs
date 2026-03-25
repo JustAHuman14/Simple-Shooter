@@ -32,7 +32,7 @@ namespace Assets.Scripts
             HandleRotation();
 
             _xRotation -= _mouseY;
-            _xRotation = Mathf.Clamp(_xRotation, -65, 40);
+            _xRotation = Mathf.Clamp(_xRotation, -65, 50);
 
             _playerHead.localRotation = Quaternion.Euler(_xRotation, 0, 0);
             _player.Rotate(Vector3.up * _mouseX);

@@ -10,14 +10,19 @@ namespace Assets.Scripts.UI
     {
         [Header("Serialized Fields")]
         [SerializeField] private List<GameObject> _weaponsList;
-        [SerializeField] private Player _player;
 
         [Header("Non-Serialized Fields")]
+        private Player _player;
         private TextMeshProUGUI _text;
 
-        void Start()
+        private void Awake()
         {
+            _player = GameObject.Find(nameof(Player)).GetComponent<Player>();
             _text = GetComponent<TextMeshProUGUI>();
+        }
+
+        private void Start()
+        {
             _player.OnWeaponSwitch += UpdateTotalAmmo;
             _player.OnWeaponShoot += UpdateTotalAmmo;
             _player.OnWeaponReload += UpdateTotalAmmo;
@@ -30,7 +35,12 @@ namespace Assets.Scripts.UI
 
         private void OnDestroy()
         {
-            _player.OnWeaponSwitch -= UpdateTotalAmmo;
+            if (_player != null)
+            {
+                _player.OnWeaponSwitch -= UpdateTotalAmmo;
+                _player.OnWeaponShoot -= UpdateTotalAmmo;
+                _player.OnWeaponReload -= UpdateTotalAmmo;
+            }
         }
     }
 }

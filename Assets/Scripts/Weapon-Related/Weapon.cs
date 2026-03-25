@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Pool;
 using Assets.Scripts.Interfaces;
 using Assets.Scripts.Character;
 
@@ -11,10 +10,8 @@ namespace Assets.Scripts.Weapon_Related
     public class Weapon : MonoBehaviour, IPickable
     {
         [Header("Serialized Fields")]
-        [SerializeField] public Bullet _bulletPrefab;
         [SerializeField] private GameObject _muzzleFlash;
         [SerializeField] private float _dropForce;
-        [SerializeField] private Transform _bulletSpawn;
         public WeaponSO weapon;
 
         [Header("Non-Serialized Fields")]
@@ -22,9 +19,6 @@ namespace Assets.Scripts.Weapon_Related
         private Vector3 _bulletDirection;
         public int maxBulletsInMag;
         public int bulletsRemainingInMag;
-        private IObjectPool<Bullet> _bulletObjectPool;
-        private readonly int defaultCapacity = 500;
-        private readonly int maxSize = 2000;
         private Coroutine _shootCoroutine;
         private Coroutine _reloadCoroutine;
         private AudioSource _audioSource;
@@ -46,34 +40,11 @@ namespace Assets.Scripts.Weapon_Related
             _muzzleFlashEffect = _muzzleFlash.GetComponent<ParticleSystem>();
             _rb = GetComponent<Rigidbody>();
             _collider = GetComponent<Collider>();
-            _bulletObjectPool = new ObjectPool<Bullet>(
-                CreateBullet,
-                bullet =>
-                {
-                    if (bullet != null)
-                        bullet.gameObject.SetActive(true);
-                },
-                bullet => bullet.gameObject.SetActive(false),
-                bullet => Destroy(bullet.gameObject),
-                true,
-                defaultCapacity,
-                maxSize
-            );
             maxBulletsInMag = weapon.maxBulletsInMag;
             bulletsRemainingInMag = maxBulletsInMag;
         }
 
-        private void Start()
-        {
-            _gameInput = GlobalReferences.Instance.gameInput;
-        }
-
-        private Bullet CreateBullet()
-        {
-            Bullet bulletInstance = Instantiate(_bulletPrefab);
-            bulletInstance.bulletObjectPool = _bulletObjectPool;
-            return bulletInstance;
-        }
+        private void Start() => _gameInput = GlobalReferences.Instance.gameInput;
 
         private void Update()
         {
@@ -86,10 +57,12 @@ namespace Assets.Scripts.Weapon_Related
                 _collider.isTrigger = false;
                 _rb.velocity = _playerRb.velocity;
                 _rb.AddForce(_bulletDirection * _dropForce, ForceMode.Impulse);
+                gameObject.layer = default;
             }
 
             if (_isPicked)
             {
+                gameObject.layer = LayerMask.NameToLayer("Weapon");
                 Ray ray = _playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0));
                 Vector3 aimPoint = Physics.Raycast(ray, out RaycastHit hit, 1000f) ? hit.point : ray.GetPoint(1000f);
                 _bulletDirection = (aimPoint - transform.position).normalized;
@@ -125,15 +98,28 @@ namespace Assets.Scripts.Weapon_Related
 
         private void FireOneBullet()
         {
-            Bullet bulletObject = _bulletObjectPool.Get();
+            if (Physics.Raycast(_playerCamera.transform.position, _playerCamera.transform.forward, out RaycastHit hit, weapon.bulletRange))
+            {
+                print(hit.collider.gameObject.name);
+                Enemy enemy = hit.collider.GetComponentInParent<Enemy>();
 
-            bulletObject ??= CreateBullet();
+                if (enemy != null)
+                {
+                    print(hit.collider.name);
+                    enemy.Damage(hit.collider.name);
+                }
+                else
+                {
+                    Transform bulletImpactInstance = Instantiate(
+                        GlobalReferences.Instance.bulletImpactPrefab.transform,
+                        hit.point + (hit.normal * 0.01f),
+                        Quaternion.LookRotation(hit.normal)
+                    );
 
-            bulletObject.transform.position = _bulletSpawn.position;
-            bulletObject.transform.rotation = Quaternion.LookRotation(_bulletDirection);
+                    bulletImpactInstance.SetParent(hit.transform);
 
-            if (bulletObject.TryGetComponent(out Rigidbody bulletRb))
-                bulletRb.velocity = _bulletDirection * weapon.bulletSpeed;
+                }
+            }
 
             bulletsRemainingInMag--;
             OnShoot?.Invoke(this);
