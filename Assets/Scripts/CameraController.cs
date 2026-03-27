@@ -1,8 +1,9 @@
 using UnityEngine;
+using Unity.Netcode;
 
 namespace Assets.Scripts
 {
-    public class CameraController : MonoBehaviour
+    public class CameraController : NetworkBehaviour
     {
         //Serialized Fields
         [Header("Player Related Settings")]
@@ -28,6 +29,7 @@ namespace Assets.Scripts
 
         private void Update()
         {
+            if (!IsOwner) return;
             _mouseSensitivity = GameManager.mouseSensitivity;
             HandleRotation();
 

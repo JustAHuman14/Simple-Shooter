@@ -5,10 +5,11 @@ using Assets.Scripts.Interfaces;
 using UnityEngine.InputSystem;
 using Assets.Scripts.Weapon_Related;
 using System.Collections;
+using Unity.Netcode;
 
 namespace Assets.Scripts.Character
 {
-    public class Player : MonoBehaviour, IDamageable
+    public class Player : NetworkBehaviour, IDamageable
     {
         // Serialized Fields
         [SerializeField] private LayerMask _groundLayerMask, _interactableLayerMask;
@@ -66,6 +67,7 @@ namespace Assets.Scripts.Character
 
         private void Update()
         {
+            if (!IsOwner) return;
             HandleSpeedAndDirection();
             HandleInteraction();
 
@@ -109,7 +111,6 @@ namespace Assets.Scripts.Character
                                     primaryWeapon1 = weapon;
                                     WeaponSwitch(1, primaryWeapon1);
                                     _isPickingWeapon = false;
-                                    return;
                                 }
                                 else if (_primaryWeaponSlot1.childCount == 1)
                                 {
@@ -117,12 +118,10 @@ namespace Assets.Scripts.Character
                                     primaryWeapon2 = weapon;
                                     WeaponSwitch(2, primaryWeapon2);
                                     _isPickingWeapon = false;
-                                    return;
                                 }
                                 else if (_primaryWeaponSlot2.childCount == 1)
                                 {
                                     print("You can only have 2 primary weapons!");
-                                    return;
                                 }
                             }
                             else if (weapon.weapon.weaponType == WeaponType.Secondary)

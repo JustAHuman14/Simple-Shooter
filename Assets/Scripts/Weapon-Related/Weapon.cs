@@ -4,10 +4,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Assets.Scripts.Interfaces;
 using Assets.Scripts.Character;
+using Unity.Netcode;
 
 namespace Assets.Scripts.Weapon_Related
 {
-    public class Weapon : MonoBehaviour, IPickable
+    public class Weapon : NetworkBehaviour, IPickable
     {
         [Header("Serialized Fields")]
         [SerializeField] private GameObject _muzzleFlash;
@@ -55,6 +56,7 @@ namespace Assets.Scripts.Weapon_Related
 
         private void Update()
         {
+            if (!IsOwner) return;
             if (_isPicked && _gameInput.IsPlayerDroppingWeapon())
             {
                 transform.localRotation = Quaternion.Euler(10, 90, 0);
