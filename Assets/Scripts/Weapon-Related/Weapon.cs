@@ -11,8 +11,7 @@ namespace Assets.Scripts.Weapon_Related
     {
         [Header("Serialized Fields")]
         [SerializeField] private GameObject _muzzleFlash;
-        [SerializeField] private float _dropForce;
-        public WeaponSO weapon;
+        [SerializeField] private LayerMask _shootLayerMask;
 
         [Header("Non-Serialized Fields")]
         private GameInput _gameInput;
@@ -31,9 +30,14 @@ namespace Assets.Scripts.Weapon_Related
         private Collider _collider;
         private Rigidbody _playerRb;
         private Camera _playerCamera;
+        private float _dropForce;
+        private bool _isPlayerQuitting;
+        public WeaponSO weapon;
+        Transform[] _children;
 
         private void Awake()
         {
+            _children = gameObject.GetComponentsInChildren<Transform>(true);
             _dropForce = 3;
             _playerRb = GameObject.Find(nameof(Player)).GetComponent<Rigidbody>();
             _audioSource = GetComponent<AudioSource>();
@@ -44,7 +48,10 @@ namespace Assets.Scripts.Weapon_Related
             bulletsRemainingInMag = maxBulletsInMag;
         }
 
-        private void Start() => _gameInput = GlobalReferences.Instance.gameInput;
+        private void Start()
+        {
+            _gameInput = GlobalReferences.Instance.gameInput;
+        }
 
         private void Update()
         {
@@ -58,11 +65,20 @@ namespace Assets.Scripts.Weapon_Related
                 _rb.velocity = _playerRb.velocity;
                 _rb.AddForce(_bulletDirection * _dropForce, ForceMode.Impulse);
                 gameObject.layer = default;
+
+                foreach (Transform child in _children)
+                {
+                    child.gameObject.layer = 0;
+                }
             }
 
             if (_isPicked)
             {
-                gameObject.layer = LayerMask.NameToLayer("Weapon");
+                foreach (Transform child in _children)
+                {
+                    child.gameObject.layer = LayerMask.NameToLayer("Weapon");
+                }
+
                 Ray ray = _playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0));
                 Vector3 aimPoint = Physics.Raycast(ray, out RaycastHit hit, 1000f) ? hit.point : ray.GetPoint(1000f);
                 _bulletDirection = (aimPoint - transform.position).normalized;
@@ -101,14 +117,14 @@ namespace Assets.Scripts.Weapon_Related
             if (Physics.Raycast(_playerCamera.transform.position, _playerCamera.transform.forward, out RaycastHit hit, weapon.bulletRange))
             {
                 print(hit.collider.gameObject.name);
-                Enemy enemy = hit.collider.GetComponentInParent<Enemy>();
+                IDamageable damageable = hit.collider.GetComponentInParent<IDamageable>();
 
-                if (enemy != null)
+                if (damageable != null)
                 {
-                    print(hit.collider.name);
-                    enemy.Damage(hit.collider.name);
+                    damageable.Damage(hit);
                 }
-                else
+
+                else if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
                 {
                     Transform bulletImpactInstance = Instantiate(
                         GlobalReferences.Instance.bulletImpactPrefab.transform,

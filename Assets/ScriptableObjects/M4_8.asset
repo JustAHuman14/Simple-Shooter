@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponType: 0
   maxBulletsInMag: 30
-  secondsGapBetweenBullets: 0.1
-  secondsGapInReloading: 0.01
+  secondsGapBetweenBullets: 0.08
+  secondsGapInReloading: 0.08
   bulletRange: 410
   gunPosition: {x: 0, y: -0.12, z: 0.15}

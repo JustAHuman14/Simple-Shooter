@@ -15,6 +15,6 @@ MonoBehaviour:
   weaponType: 1
   maxBulletsInMag: 32
   secondsGapBetweenBullets: 0.1
-  secondsGapInReloading: 0.01
+  secondsGapInReloading: 0.05
   bulletRange: 310
   gunPosition: {x: 0.05, y: 0.05, z: 0}

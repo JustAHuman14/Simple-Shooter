@@ -4,10 +4,10 @@ using Assets.Scripts.Character;
 
 namespace Assets.Scripts.UI
 {
-    public class EnemyHealthBar : MonoBehaviour
+    public class PlayerHealthBar : MonoBehaviour
     {
         // Serialized Fields
-        [SerializeField] private Enemy _enemy;
+        [SerializeField] private Player _player;
         [SerializeField] private Image _healthBarImage;
 
         // Non-Serialized Fields
@@ -20,27 +20,28 @@ namespace Assets.Scripts.UI
 
         private void Start()
         {
-            _enemy.OnDamage += UpdateEnemyHealth;
+            _player.OnDamage += UpdateEnemyHealth;
             UpdateEnemyHealth();
         }
 
         private void UpdateEnemyHealth()
         {
-            _healthBarImage.fillAmount = _enemy.currentHealth / _enemy.maxHealth;
+            _healthBarImage.fillAmount = _player.currentHealth / _player.maxHealth;
         }
 
         private void LateUpdate()
         {
             foreach (GameObject playerPOV in _playerPOVArray)
             {
-                transform.LookAt(playerPOV.transform);
+                if (playerPOV.transform.parent != _player.transform && _player != null)
+                    transform.LookAt(playerPOV.transform);
             }
         }
 
         private void OnDestroy()
         {
-            if (_enemy != null)
-                _enemy.OnDamage -= UpdateEnemyHealth;
+            if (_player != null)
+                _player.OnDamage -= UpdateEnemyHealth;
         }
     }
 }

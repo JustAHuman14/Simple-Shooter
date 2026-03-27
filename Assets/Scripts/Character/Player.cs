@@ -4,10 +4,11 @@ using TMPro;
 using Assets.Scripts.Interfaces;
 using UnityEngine.InputSystem;
 using Assets.Scripts.Weapon_Related;
+using System.Collections;
 
 namespace Assets.Scripts.Character
 {
-    public class Player : MonoBehaviour, ICharacter
+    public class Player : MonoBehaviour, IDamageable
     {
         // Serialized Fields
         [SerializeField] private LayerMask _groundLayerMask, _interactableLayerMask;
@@ -16,6 +17,7 @@ namespace Assets.Scripts.Character
         [SerializeField] private Transform _primaryWeaponSlot1, _primaryWeaponSlot2, _secondaryWeaponSlot;
         [SerializeField] private float _playerSpeed;
         [SerializeField] private Enemy _enemy;
+        [SerializeField] private MeshRenderer _playerHeadMeshRenderer, _playerTorsoMeshRenderer;
 
         // Non-Serialized Fields
         private GameInput _gameInput;
@@ -26,9 +28,11 @@ namespace Assets.Scripts.Character
         private Weapon _weapon, primaryWeapon1, primaryWeapon2, secondaryWeapon;
         private GameObject _pickupUI;
         private bool _isPickingWeapon;
-
+        private readonly float _colorChangedAfterDamageSeconds = 0.05f;
+        public float maxHealth = 200f, currentHealth;
         public event Action<Weapon> OnWeaponSwitch, OnWeaponShoot, OnWeaponReload;
         public event Action<GameObject> OnGunInPickingRange;
+        public event Action OnDamage;
 
         private void Awake()
         {
@@ -36,6 +40,7 @@ namespace Assets.Scripts.Character
             _rb.freezeRotation = true;
             _pickupUI = GameObject.Find("PickupUI");
             GameManager.mouseSensitivity = PlayerPrefs.GetFloat("mouseSensitivity");
+            currentHealth = maxHealth;
         }
 
         private void Start()
@@ -104,6 +109,7 @@ namespace Assets.Scripts.Character
                                     primaryWeapon1 = weapon;
                                     WeaponSwitch(1, primaryWeapon1);
                                     _isPickingWeapon = false;
+                                    return;
                                 }
                                 else if (_primaryWeaponSlot1.childCount == 1)
                                 {
@@ -111,9 +117,13 @@ namespace Assets.Scripts.Character
                                     primaryWeapon2 = weapon;
                                     WeaponSwitch(2, primaryWeapon2);
                                     _isPickingWeapon = false;
+                                    return;
                                 }
-                                else
+                                else if (_primaryWeaponSlot2.childCount == 1)
+                                {
                                     print("You can only have 2 primary weapons!");
+                                    return;
+                                }
                             }
                             else if (weapon.weapon.weaponType == WeaponType.Secondary)
                             {
@@ -191,5 +201,40 @@ namespace Assets.Scripts.Character
         }
 
         public bool IsWalking() => _moveDirection != Vector3.zero;
+
+        public void Damage(RaycastHit hit)
+        {
+            switch (hit.collider.name)
+            {
+                case "PlayerHead":
+                    TakeDamage(20, _playerHeadMeshRenderer);
+                    break;
+                case "PlayerTorso":
+                    TakeDamage(10, _playerTorsoMeshRenderer);
+                    break;
+            }
+        }
+
+        private void TakeDamage(int damage, MeshRenderer _playerMeshRenderer)
+        {
+            currentHealth -= damage;
+            OnDamage?.Invoke();
+
+            if (currentHealth <= 0)
+            {
+                currentHealth = 0;
+                Destroy(gameObject);
+                return;
+            }
+
+            StartCoroutine(PlayerDamagedRoutine(_playerMeshRenderer));
+        }
+
+        private IEnumerator PlayerDamagedRoutine(MeshRenderer _playerMeshRenderer)
+        {
+            _playerMeshRenderer.material.color = Color.red;
+            yield return new WaitForSeconds(_colorChangedAfterDamageSeconds);
+            _playerMeshRenderer.material.color = Color.yellow;
+        }
     }
 }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3529775450187104428}
   - component: {fileID: 3529775450187104430}
   - component: {fileID: 3529775450187104431}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HB Foreground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 3529775450189338428}
   - component: {fileID: 3529775450189338429}
   - component: {fileID: 939852214698549052}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: EnemyHealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -202,7 +202,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3529775451239162934}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy Eyes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -238,7 +238,7 @@ GameObject:
   - component: {fileID: 3529775451546520615}
   - component: {fileID: 3529775451546520612}
   - component: {fileID: 6166572902519789260}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -336,7 +336,7 @@ GameObject:
   - component: {fileID: 3529775451576405298}
   - component: {fileID: 3529775451576405299}
   - component: {fileID: 6261416217946877421}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: EnemyTorso
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -433,7 +433,7 @@ GameObject:
   - component: {fileID: 3529775451815796157}
   - component: {fileID: 3529775451815796154}
   - component: {fileID: 8550236294244567853}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: EnemyHead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -530,7 +530,7 @@ GameObject:
   - component: {fileID: 3529775451954598567}
   - component: {fileID: 3529775451954598569}
   - component: {fileID: 3529775451954598566}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HB Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -607,7 +607,7 @@ GameObject:
   - component: {fileID: 3529775452129686587}
   - component: {fileID: 3529775452129686588}
   - component: {fileID: 3529775452129686589}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Right Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -690,7 +690,7 @@ GameObject:
   - component: {fileID: 3529775452130925579}
   - component: {fileID: 3529775452130925580}
   - component: {fileID: 3529775452130925581}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: 'Left Eye '
   m_TagString: Untagged
   m_Icon: {fileID: 0}

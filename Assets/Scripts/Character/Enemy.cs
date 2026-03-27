@@ -1,11 +1,12 @@
 using System;
 using System.Collections;
+using Assets.Scripts.Interfaces;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace Assets.Scripts.Character
 {
-    public class Enemy : MonoBehaviour
+    public class Enemy : MonoBehaviour, IDamageable
     {
         //Serialized Fields
         [SerializeField] private MeshRenderer _enemyHeadMeshRenderer;
@@ -23,6 +24,7 @@ namespace Assets.Scripts.Character
         private bool _isPlayerInSightRange;
         private bool _isPlayerInAttackRange;
         private Transform _player;
+        private float _fieldOfView = 60f;
         private readonly float _colorChangedAfterDamageSeconds = 0.05f;
 
         private void Awake()
@@ -34,8 +36,17 @@ namespace Assets.Scripts.Character
 
         private void Update()
         {
-            _isPlayerInSightRange = Physics.CheckSphere(transform.position, _sightRange, _playerLayerMask);
-            _isPlayerInAttackRange = Physics.CheckSphere(transform.position, _attackRange, _playerLayerMask);
+            if (Vector3.Distance(transform.position, _player.position) <= _sightRange)
+            {
+                if (Vector3.Angle(transform.position, _player.position) >= -_fieldOfView && Vector3.Angle(transform.position, _player.position) <= _fieldOfView)
+                    _isPlayerInSightRange = true;
+            }
+
+            if (Vector3.Distance(_player.transform.position, transform.position) <= _attackRange)
+            {
+                if (Vector3.Angle(transform.position, _player.position) >= -_fieldOfView && Vector3.Angle(transform.position, _player.position) <= _fieldOfView)
+                    _isPlayerInAttackRange = true;
+            }
 
             if (_isPlayerInSightRange && !_isPlayerInAttackRange)
                 ChasePlayer();
@@ -48,9 +59,9 @@ namespace Assets.Scripts.Character
             _agent.SetDestination(transform.position);
         }
 
-        public void Damage(string bodyPartCollided)
+        public void Damage(RaycastHit hit)
         {
-            switch (bodyPartCollided)
+            switch (hit.collider.name)
             {
                 case "EnemyHead":
                     TakeDamage(20, _enemyHeadMeshRenderer);
@@ -84,12 +95,6 @@ namespace Assets.Scripts.Character
             _enemyMeshRenderer.material.color = Color.red;
             yield return new WaitForSeconds(_colorChangedAfterDamageSeconds);
             _enemyMeshRenderer.material.color = Color.white;
-        }
-
-        private void OnDrawGizmos()
-        {
-            Gizmos.DrawSphere(transform.position, _sightRange);
-            Gizmos.color = Color.yellow;
         }
     }
 }

@@ -6,6 +6,7 @@
   <Project Path="Unity.InputSystem.csproj" />
   <Project Path="Unity.RenderPipelines.Universal.Runtime.csproj" />
   <Project Path="Unity.Postprocessing.Runtime.csproj" />
+  <Project Path="Unity.Animation.Rigging.csproj" />
   <Project Path="Unity.TextMeshPro.csproj" />
   <Project Path="Cinemachine.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
@@ -28,6 +29,7 @@
   <Project Path="Unity.RenderPipelines.Core.Editor.csproj" />
   <Project Path="Unity.Postprocessing.Editor.csproj" />
   <Project Path="UnityEditor.TestRunner.csproj" />
+  <Project Path="Unity.Animation.Rigging.Editor.csproj" />
   <Project Path="Unity.Searcher.Editor.csproj" />
   <Project Path="Unity.SysrootPackage.Editor.csproj" />
   <Project Path="UnityEditor.UI.csproj" />

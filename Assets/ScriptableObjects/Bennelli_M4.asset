@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 27ce99b1bc81b7863b71f74170b2edab, type: 3}
-  m_Name: M1911
+  m_Name: Bennelli_M4
   m_EditorClassIdentifier: 
   weaponType: 1
-  maxBulletsInMag: 8
-  secondsGapBetweenBullets: 0.2
-  secondsGapInReloading: 0.12
-  bulletRange: 210
-  gunPosition: {x: 0.0002, y: 0.003, z: 0.00265}
+  maxBulletsInMag: 7
+  secondsGapBetweenBullets: 0.35
+  secondsGapInReloading: 0.3
+  bulletRange: 76
+  gunPosition: {x: 0.15, y: 0, z: 0}
