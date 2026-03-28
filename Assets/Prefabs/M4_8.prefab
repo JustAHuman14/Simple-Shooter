@@ -424,12 +424,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3857534045660709517}
+  - component: {fileID: 7951826906305925925}
   - component: {fileID: 808531747651579077}
   - component: {fileID: 924020127842129262}
   - component: {fileID: 3886986875693042123}
   - component: {fileID: 3878819407956915429}
   - component: {fileID: 665263254634546976}
-  - component: {fileID: 7951826906305925925}
   - component: {fileID: 5328045909911536735}
   - component: {fileID: 1699989519}
   - component: {fileID: 1699989518}
@@ -461,6 +461,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -65, z: -90}
+--- !u!114 &7951826906305925925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3856515782468643741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 398721278
+  InScenePlacedSourceGlobalObjectIdHash: 3023866065
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &808531747651579077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -639,27 +660,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.0597421, y: 0.17664656, z: 0.7236116}
   m_Center: {x: -0.004013397, y: 0.008912884, z: 0.023460403}
---- !u!114 &7951826906305925925
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3856515782468643741}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 0
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!54 &5328045909911536735
 Rigidbody:
   m_ObjectHideFlags: 0

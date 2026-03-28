@@ -8,6 +8,7 @@ namespace Assets.Scripts
     {
         public GameObject bulletImpactPrefab;
         public GameInput gameInput;
+        public GameObject pickupUI;
 
         public static GlobalReferences Instance { get; private set; }
 

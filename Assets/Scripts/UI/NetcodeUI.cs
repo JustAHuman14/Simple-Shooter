@@ -11,15 +11,7 @@ namespace Assets.Scripts.UI
 
         private void Start()
         {
-            _startHostBtn.onClick.AddListener(() =>
-            {
-                NetworkManager.Singleton.StartHost(); 
-            });
-
-            _startClientBtn.onClick.AddListener(() =>
-            {
-                NetworkManager.Singleton.StartClient();
-            });
+            NetworkManager.Singleton.StartClient();
         }
     }
 }

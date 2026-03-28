@@ -56,7 +56,7 @@ namespace Assets.Scripts.Weapon_Related
 
         private void Update()
         {
-            if (!IsOwner) return;
+            if (!IsLocalPlayer) return;
             if (_isPicked && _gameInput.IsPlayerDroppingWeapon())
             {
                 transform.localRotation = Quaternion.Euler(10, 90, 0);

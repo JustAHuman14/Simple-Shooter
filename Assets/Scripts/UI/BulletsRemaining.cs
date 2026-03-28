@@ -28,7 +28,7 @@ namespace Assets.Scripts.UI
 
         private void UpdateTotalAmmo(Weapon weapon)
         {
-            if (!IsOwner) return;
+            if (!IsLocalPlayer) return;
             _text.text = $"{weapon.bulletsRemainingInMag}/{weapon.maxBulletsInMag}";
         }
 

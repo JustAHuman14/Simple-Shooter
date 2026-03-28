@@ -39,7 +39,7 @@ namespace Assets.Scripts.Character
         {
             _rb = GetComponent<Rigidbody>();
             _rb.freezeRotation = true;
-            _pickupUI = GameObject.Find("PickupUI");
+            _pickupUI = GlobalReferences.Instance.pickupUI;
             GameManager.mouseSensitivity = PlayerPrefs.GetFloat("mouseSensitivity");
             currentHealth = maxHealth;
         }
@@ -67,7 +67,7 @@ namespace Assets.Scripts.Character
 
         private void Update()
         {
-            if (!IsOwner) return;
+            if (!IsLocalPlayer) return;
             HandleSpeedAndDirection();
             HandleInteraction();
 

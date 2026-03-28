@@ -9,13 +9,9 @@ namespace Assets.Scripts.UI
         private Player _player;
         [SerializeField] private TextMeshProUGUI _text;
 
-        private void Awake()
-        {
-            _player = GameObject.Find(nameof(Player)).GetComponent<Player>();
-        }
-
         private void Start()
         {
+            _player = GameObject.Find(nameof(Player)).GetComponent<Player>();
             _player.OnGunInPickingRange += HandleInteract;
         }
 
