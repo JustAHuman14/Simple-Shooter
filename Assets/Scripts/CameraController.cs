@@ -5,15 +5,15 @@ namespace Assets.Scripts
     public class CameraController : MonoBehaviour
     {
         //Serialized Fields
-        [Header("Player Related Settings")]
         [SerializeField] private Transform _player;
         [SerializeField] private Transform _playerHead;
-
-        [Header("Mouse Related Settings")]
         [SerializeField] private float _mouseSensitivity;
+        [SerializeField] private Camera _gunCamera;
+        [SerializeField] private Camera _playerCamera;
 
         //Non-Serialized Fields
         private GameInput _gameInput;
+        private Camera _playerPOV;
         private float _xRotation;
         private float _mouseX;
         private float _mouseY;
@@ -24,10 +24,14 @@ namespace Assets.Scripts
             _gameInput = GlobalReferences.Instance.gameInput;
             _mouseSensitivity = GameManager.mouseSensitivity;
             _gameInput.OnExit += ctx => Cursor.lockState = CursorLockMode.None;
+            _playerPOV = GetComponent<Camera>();
         }
 
         private void Update()
         {
+            _playerPOV.fieldOfView = _gameInput.IsPlayerAiming() ? 30 : 60;
+            _gunCamera.fieldOfView = _gameInput.IsPlayerAiming() ? 30 : 60;
+            _playerCamera.fieldOfView = _gameInput.IsPlayerAiming() ? 30 : 60;
             _mouseSensitivity = GameManager.mouseSensitivity;
             HandleRotation();
 

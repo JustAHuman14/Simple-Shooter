@@ -925,6 +925,8 @@ MonoBehaviour:
   _player: {fileID: 3298872854503315576}
   _playerHead: {fileID: 3298872856046802436}
   _mouseSensitivity: 20.6
+  _gunCamera: {fileID: 1148345785}
+  _playerCamera: {fileID: 748877294270082825}
 --- !u!81 &3298872855836277989
 AudioListener:
   m_ObjectHideFlags: 0

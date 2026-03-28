@@ -56,7 +56,7 @@ namespace Assets.Scripts.Character
         private void SpawnEnemy(InputAction.CallbackContext context)
         {
             Ray ray = _playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0));
-            if (Physics.Raycast(ray, out RaycastHit hit, 20f, _groundLayerMask))
+            if (Physics.Raycast(ray, out RaycastHit hit, 60f, _groundLayerMask))
             {
                 Vector3 spawnPoint = hit.point;
                 Enemy enemy = Instantiate(_enemy, spawnPoint, Quaternion.identity);
@@ -110,14 +110,14 @@ namespace Assets.Scripts.Character
                                     WeaponSwitch(1, primaryWeapon1);
                                     _isPickingWeapon = false;
                                 }
-                                else if (_primaryWeaponSlot1.childCount == 1)
+                                else if (_primaryWeaponSlot1.childCount == 1 && _primaryWeaponSlot2.childCount == 0)
                                 {
                                     pickable.Pick(_primaryWeaponSlot2);
                                     primaryWeapon2 = weapon;
                                     WeaponSwitch(2, primaryWeapon2);
                                     _isPickingWeapon = false;
                                 }
-                                else if (_primaryWeaponSlot2.childCount == 1)
+                                else if (_primaryWeaponSlot2.childCount == 1 && _primaryWeaponSlot1.childCount == 1)
                                 {
                                     print("You can only have 2 primary weapons!");
                                 }

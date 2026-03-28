@@ -42,8 +42,8 @@ namespace Assets.Scripts
         public bool IsPlayerAttacking() => _playerInput.Player.Attack.IsPressed();
         public bool IsPlayerJumping() => _playerInput.Player.Jump.IsPressed();
         public bool IsPlayerReloading() => _playerInput.Player.Reload.IsPressed();
-        public bool IsPlayerPicking() => _playerInput.Player.Pickup.IsPressed();
         public bool IsPlayerDroppingWeapon() => _playerInput.Player.WeaponDrop.IsPressed();
+        public bool IsPlayerAiming() => _playerInput.Player.Aim.IsPressed();
 
         public Vector2 GetPlayerMovementVector() => _playerInput.Player.Move.ReadValue<Vector2>();
         public Vector2 GetPlayerHeadMovement() => _playerInput.Player.HeadRotate.ReadValue<Vector2>();

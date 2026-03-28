@@ -58,6 +58,10 @@ namespace Assets.Scripts.Weapon_Related
         {
             if (_isPicked && _gameInput.IsPlayerDroppingWeapon())
             {
+            	StopAllCoroutines();
+                _shootCoroutine = null;
+                _reloadCoroutine = null;
+                _isShooting = false;
                 transform.localRotation = Quaternion.Euler(10, 90, 0);
                 transform.parent = null;
                 _isPicked = false;
@@ -115,10 +119,12 @@ namespace Assets.Scripts.Weapon_Related
 
         private void FireOneBullet()
         {
-            Vector3 bulletDir = new(
-                _playerCamera.transform.forward.x + Random.Range(-weapon.spreadDensityX, weapon.spreadDensityX),
-                _playerCamera.transform.forward.y + Random.Range(-weapon.spreadDensityY, weapon.spreadDensityY),
-                _playerCamera.transform.forward.z);
+            float spreadDensityX = _gameInput.IsPlayerAiming() ? 0.01f : weapon.spreadDensityX;
+            float spreadDensityY = _gameInput.IsPlayerAiming() ? 0.01f : weapon.spreadDensityY;
+
+            Vector3 bulletDir = _playerCamera.transform.forward +
+            (_playerCamera.transform.right * Random.Range(-spreadDensityX, spreadDensityX)) +
+            (_playerCamera.transform.up * Random.Range(0, spreadDensityY));
 
             if (Physics.Raycast(_playerCamera.transform.position, bulletDir, out RaycastHit hit, weapon.bulletRange))
             {

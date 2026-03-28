@@ -18,3 +18,5 @@ MonoBehaviour:
   secondsGapInReloading: 0.08
   bulletRange: 410
   gunPosition: {x: 0, y: -0.12, z: 0.15}
+  spreadDensityX: 0.09
+  spreadDensityY: 0.1
