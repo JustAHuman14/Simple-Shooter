@@ -1,9 +1,8 @@
 using UnityEngine;
-using Unity.Netcode;
 
 namespace Assets.Scripts
 {
-    public class CameraController : NetworkBehaviour
+    public class CameraController : MonoBehaviour
     {
         //Serialized Fields
         [Header("Player Related Settings")]
@@ -29,12 +28,11 @@ namespace Assets.Scripts
 
         private void Update()
         {
-            if (!IsOwner) return;
             _mouseSensitivity = GameManager.mouseSensitivity;
             HandleRotation();
 
             _xRotation -= _mouseY;
-            _xRotation = Mathf.Clamp(_xRotation, -65, 50);
+            _xRotation = Mathf.Clamp(_xRotation, -50, 50);
 
             _playerHead.localRotation = Quaternion.Euler(_xRotation, 0, 0);
             _player.Rotate(Vector3.up * _mouseX);

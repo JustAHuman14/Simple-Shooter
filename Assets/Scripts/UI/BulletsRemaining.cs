@@ -3,11 +3,10 @@ using UnityEngine;
 using TMPro;
 using Assets.Scripts.Character;
 using Assets.Scripts.Weapon_Related;
-using Unity.Netcode;
 
 namespace Assets.Scripts.UI
 {
-    public class BulletsRemaining : NetworkBehaviour
+    public class BulletsRemaining : MonoBehaviour
     {
         [Header("Non-Serialized Fields")]
         private Player _player;
@@ -28,11 +27,10 @@ namespace Assets.Scripts.UI
 
         private void UpdateTotalAmmo(Weapon weapon)
         {
-            if (!IsLocalPlayer) return;
             _text.text = $"{weapon.bulletsRemainingInMag}/{weapon.maxBulletsInMag}";
         }
 
-        private new void OnDestroy()
+        private void OnDestroy()
         {
             if (_player == null) return;
             _player.OnWeaponSwitch -= UpdateTotalAmmo;

@@ -27,13 +27,13 @@ namespace Assets.Scripts.Character
         private float _fieldOfView = 60f;
         private readonly float _colorChangedAfterDamageSeconds = 0.05f;
 
-        private void Awake()
-        {
+	private void Start()
+	{
             _agent = GetComponent<NavMeshAgent>();
-            _player = GameObject.Find(nameof(Player)).transform;
             currentHealth = maxHealth;
-        }
-
+	    _player = GameObject.Find(nameof(Player)).transform;
+	}
+	
         private void Update()
         {
             if (Vector3.Distance(transform.position, _player.position) <= _sightRange)

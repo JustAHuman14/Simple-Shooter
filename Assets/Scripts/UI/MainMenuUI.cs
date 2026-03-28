@@ -1,7 +1,6 @@
 using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Unity.Netcode;
 
 namespace Assets.Scripts.UI
 {
@@ -18,8 +17,6 @@ namespace Assets.Scripts.UI
             {
                 _loading.SetActive(true);
                 SceneManager.LoadScene(1);
-                NetworkManager.Singleton.StartHost();
-//                NetworkManager.Singleton.StartClient();
             });
 
             _quitButton.onClick.AddListener(() =>

@@ -5,11 +5,10 @@ using Assets.Scripts.Interfaces;
 using UnityEngine.InputSystem;
 using Assets.Scripts.Weapon_Related;
 using System.Collections;
-using Unity.Netcode;
 
 namespace Assets.Scripts.Character
 {
-    public class Player : NetworkBehaviour, IDamageable
+    public class Player : MonoBehaviour, IDamageable
     {
         // Serialized Fields
         [SerializeField] private LayerMask _groundLayerMask, _interactableLayerMask;
@@ -39,13 +38,13 @@ namespace Assets.Scripts.Character
         {
             _rb = GetComponent<Rigidbody>();
             _rb.freezeRotation = true;
-            _pickupUI = GlobalReferences.Instance.pickupUI;
             GameManager.mouseSensitivity = PlayerPrefs.GetFloat("mouseSensitivity");
             currentHealth = maxHealth;
         }
 
         private void Start()
         {
+            _pickupUI = GlobalReferences.Instance.pickupUI;
             _gameInput = GlobalReferences.Instance.gameInput;
             _gameInput.OnSprint += HandleSprint;
             _gameInput.OnWeaponSwitch += HandleActiveGun;
@@ -67,7 +66,6 @@ namespace Assets.Scripts.Character
 
         private void Update()
         {
-            if (!IsLocalPlayer) return;
             HandleSpeedAndDirection();
             HandleInteraction();
 

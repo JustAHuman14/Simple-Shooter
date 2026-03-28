@@ -17,5 +17,7 @@ namespace Assets.Scripts.Weapon_Related
         public float secondsGapInReloading;
         public float bulletRange;
         public Vector3 gunPosition;
+        public float spreadDensityX;
+        public float spreadDensityY;
     }
 }

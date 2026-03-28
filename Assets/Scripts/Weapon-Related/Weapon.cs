@@ -1,14 +1,14 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 using UnityEngine.EventSystems;
 using Assets.Scripts.Interfaces;
 using Assets.Scripts.Character;
-using Unity.Netcode;
 
 namespace Assets.Scripts.Weapon_Related
 {
-    public class Weapon : NetworkBehaviour, IPickable
+    public class Weapon : MonoBehaviour, IPickable
     {
         [Header("Serialized Fields")]
         [SerializeField] private GameObject _muzzleFlash;
@@ -56,7 +56,6 @@ namespace Assets.Scripts.Weapon_Related
 
         private void Update()
         {
-            if (!IsLocalPlayer) return;
             if (_isPicked && _gameInput.IsPlayerDroppingWeapon())
             {
                 transform.localRotation = Quaternion.Euler(10, 90, 0);
@@ -116,7 +115,12 @@ namespace Assets.Scripts.Weapon_Related
 
         private void FireOneBullet()
         {
-            if (Physics.Raycast(_playerCamera.transform.position, _playerCamera.transform.forward, out RaycastHit hit, weapon.bulletRange))
+            Vector3 bulletDir = new(
+                _playerCamera.transform.forward.x + Random.Range(-weapon.spreadDensityX, weapon.spreadDensityX),
+                _playerCamera.transform.forward.y + Random.Range(-weapon.spreadDensityY, weapon.spreadDensityY),
+                _playerCamera.transform.forward.z);
+
+            if (Physics.Raycast(_playerCamera.transform.position, bulletDir, out RaycastHit hit, weapon.bulletRange))
             {
                 print(hit.collider.gameObject.name);
                 IDamageable damageable = hit.collider.GetComponentInParent<IDamageable>();
