@@ -221,6 +221,7 @@ namespace Assets.Scripts.Character
             if (currentHealth <= 0)
             {
                 currentHealth = 0;
+                Cursor.lockState = CursorLockMode.Locked;
                 SceneManager.LoadScene(0);
             }
 
