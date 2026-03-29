@@ -9,6 +9,7 @@ namespace Assets.Scripts
         public GameObject bulletImpactPrefab;
         public GameInput gameInput;
         public GameObject pickupUI;
+        public GameObject pauseMenuUI;
 
         public static GlobalReferences Instance { get; private set; }
 

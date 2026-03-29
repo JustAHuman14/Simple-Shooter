@@ -9,7 +9,6 @@ namespace Assets.Scripts
         [SerializeField] private Transform _playerHead;
         [SerializeField] private float _mouseSensitivity;
         [SerializeField] private Camera _gunCamera;
-        [SerializeField] private Camera _playerCamera;
 
         //Non-Serialized Fields
         private GameInput _gameInput;
@@ -31,7 +30,6 @@ namespace Assets.Scripts
         {
             _playerPOV.fieldOfView = _gameInput.IsPlayerAiming() ? 30 : 60;
             _gunCamera.fieldOfView = _gameInput.IsPlayerAiming() ? 30 : 60;
-            _playerCamera.fieldOfView = _gameInput.IsPlayerAiming() ? 30 : 60;
             _mouseSensitivity = GameManager.mouseSensitivity;
             HandleRotation();
 

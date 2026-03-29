@@ -5,6 +5,7 @@ using Assets.Scripts.Interfaces;
 using UnityEngine.InputSystem;
 using Assets.Scripts.Weapon_Related;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Character
 {
@@ -220,8 +221,7 @@ namespace Assets.Scripts.Character
             if (currentHealth <= 0)
             {
                 currentHealth = 0;
-                Destroy(gameObject);
-                return;
+                SceneManager.LoadScene(0);
             }
 
             StartCoroutine(PlayerDamagedRoutine(_playerMeshRenderer));

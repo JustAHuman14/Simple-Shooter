@@ -5,6 +5,8 @@ using Random = UnityEngine.Random;
 using UnityEngine.EventSystems;
 using Assets.Scripts.Interfaces;
 using Assets.Scripts.Character;
+using UnityEngine.InputSystem;
+using Assets.Scripts.UI;
 
 namespace Assets.Scripts.Weapon_Related
 {
@@ -15,6 +17,7 @@ namespace Assets.Scripts.Weapon_Related
         [SerializeField] private LayerMask _shootLayerMask;
 
         [Header("Non-Serialized Fields")]
+        private float _dropForce;
         private GameInput _gameInput;
         private Vector3 _bulletDirection;
         public int maxBulletsInMag;
@@ -23,7 +26,6 @@ namespace Assets.Scripts.Weapon_Related
         private Coroutine _reloadCoroutine;
         private AudioSource _audioSource;
         private ParticleSystem _muzzleFlashEffect;
-        private bool _isShooting;
         public event Action<Weapon> OnShoot;
         public event Action<Weapon> OnReload;
         private bool _isPicked;
@@ -31,10 +33,10 @@ namespace Assets.Scripts.Weapon_Related
         private Collider _collider;
         private Rigidbody _playerRb;
         private Camera _playerCamera;
-        private float _dropForce;
-        private bool _isPlayerQuitting;
         public WeaponSO weapon;
-        Transform[] _children;
+        private Transform[] _children;
+        private bool _isPlayerTryingToQuit;
+        private GameObject _pauseMenuUI;
 
         private void Awake()
         {
@@ -52,57 +54,58 @@ namespace Assets.Scripts.Weapon_Related
         private void Start()
         {
             _gameInput = GlobalReferences.Instance.gameInput;
+            _pauseMenuUI = GlobalReferences.Instance.pauseMenuUI;
+            _gameInput.OnExit += OnExit;
         }
+
+        private void OnExit(InputAction.CallbackContext context) => StopCoroutines();
 
         private void Update()
         {
+            if (_isPicked) HandleShootingAndReload();
+
+            HandleWeaponDrop();
+        }
+
+        private void HandleWeaponDrop()
+        {
             if (_isPicked && _gameInput.IsPlayerDroppingWeapon())
             {
-            	StopAllCoroutines();
-                _shootCoroutine = null;
-                _reloadCoroutine = null;
-                _isShooting = false;
+                StopCoroutines();
                 transform.localRotation = Quaternion.Euler(10, 90, 0);
                 transform.parent = null;
                 _isPicked = false;
                 _rb.isKinematic = false;
                 _collider.isTrigger = false;
                 _rb.velocity = _playerRb.velocity;
-                _rb.AddForce(_bulletDirection * _dropForce, ForceMode.Impulse);
-                gameObject.layer = default;
+                _rb.AddForce(_playerCamera.transform.forward * _dropForce, ForceMode.Impulse);
 
                 foreach (Transform child in _children)
                 {
                     child.gameObject.layer = 0;
                 }
             }
+        }
 
-            if (_isPicked)
-            {
-                foreach (Transform child in _children)
-                {
-                    child.gameObject.layer = LayerMask.NameToLayer("Weapon");
-                }
-
-                Ray ray = _playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0));
-                Vector3 aimPoint = Physics.Raycast(ray, out RaycastHit hit, 1000f) ? hit.point : ray.GetPoint(1000f);
-                _bulletDirection = (aimPoint - transform.position).normalized;
-                HandleShootingAndReload();
-            }
+        private void StopCoroutines()
+        {
+            StopAllCoroutines();
+            _shootCoroutine = null;
+            _reloadCoroutine = null;
         }
 
         private void HandleShootingAndReload()
         {
-            if (_gameInput.IsPlayerAttacking() && _reloadCoroutine == null && !_isShooting && bulletsRemainingInMag > 0 && !EventSystem.current.IsPointerOverGameObject())
+            _isPlayerTryingToQuit = _pauseMenuUI.activeInHierarchy;
+            if (_gameInput.IsPlayerAttacking() && _reloadCoroutine == null && bulletsRemainingInMag > 0 && !_isPlayerTryingToQuit)
                 _shootCoroutine ??= StartCoroutine(ShootRoutine());
 
-            if (_gameInput.IsPlayerReloading() && bulletsRemainingInMag < weapon.maxBulletsInMag && !_isShooting)
+            if (_gameInput.IsPlayerReloading() && bulletsRemainingInMag < weapon.maxBulletsInMag && _shootCoroutine == null && !_isPlayerTryingToQuit)
                 _reloadCoroutine ??= StartCoroutine(ReloadRoutine());
         }
 
         private IEnumerator ShootRoutine()
         {
-            _isShooting = true;
             FireOneBullet();
 
             yield return new WaitForSeconds(weapon.secondsGapBetweenBullets);
@@ -114,7 +117,6 @@ namespace Assets.Scripts.Weapon_Related
             }
 
             _shootCoroutine = null;
-            _isShooting = false;
         }
 
         private void FireOneBullet()
@@ -128,15 +130,11 @@ namespace Assets.Scripts.Weapon_Related
 
             if (Physics.Raycast(_playerCamera.transform.position, bulletDir, out RaycastHit hit, weapon.bulletRange))
             {
-                print(hit.collider.gameObject.name);
                 IDamageable damageable = hit.collider.GetComponentInParent<IDamageable>();
 
-                if (damageable != null)
-                {
-                    damageable.Damage(hit);
-                }
+                damageable?.Damage(hit);
 
-                else if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
                 {
                     Transform bulletImpactInstance = Instantiate(
                         GlobalReferences.Instance.bulletImpactPrefab.transform,
@@ -181,13 +179,22 @@ namespace Assets.Scripts.Weapon_Related
             _rb.isKinematic = true;
             _collider.isTrigger = true;
             _playerCamera = GetComponentInParent<Player>().GetComponentInChildren<Camera>();
+
+            foreach (Transform child in _children)
+            {
+                child.gameObject.layer = LayerMask.NameToLayer("Weapon");
+            }
         }
 
         private void OnDisable()
         {
-            _reloadCoroutine = null;
-            _shootCoroutine = null;
-            _isShooting = false;
+            StopCoroutines();
+        }
+
+        private void OnDestroy()
+        {
+            if (_gameInput != null)
+                _gameInput.OnExit -= OnExit;
         }
     }
 }
