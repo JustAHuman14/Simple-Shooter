@@ -12,7 +12,7 @@ namespace Assets.Scripts.UI
         [SerializeField] private Button _mainMenuBtn;
         [SerializeField] private Button _resumeBtn;
         [SerializeField] private Slider _mouseSensitivitySlider;
-
+	
         private void Start()
         {
             _mouseSensitivitySlider.value = PlayerPrefs.GetFloat("mouseSensitivity");
@@ -24,7 +24,7 @@ namespace Assets.Scripts.UI
             _mainMenuBtn.onClick.AddListener(() =>
             {
                 PlayerPrefs.SetFloat("mouseSensitivity", GameManager.mouseSensitivity);
-                SceneManager.LoadScene(0);
+                SceneChanger.Instance.LoadScene(0);
                 Time.timeScale = 1;
             });
 
@@ -37,7 +37,6 @@ namespace Assets.Scripts.UI
             gameObject.SetActive(!gameObject.activeInHierarchy);
             Time.timeScale = gameObject.activeInHierarchy ? 0 : 1;
             Cursor.lockState = gameObject.activeInHierarchy ? CursorLockMode.None : CursorLockMode.Locked;
-
         }
 
         private void GameResume()
