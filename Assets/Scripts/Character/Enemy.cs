@@ -62,44 +62,39 @@ namespace Assets.Scripts.Character
             if (_isPlayerInSightRange && !_isPlayerInAttackRange)
                 ChasePlayer();
             else if (_isPlayerInAttackRange)
-                _attackCoroutine ??= StartCoroutine(AttackPlayer());
+                _attackCoroutine ??= StartCoroutine(AttackPlayerRoutine());
 
             if (_weapon.bulletsRemainingInMag == 0)
-                _reloadCoroutine ??= StartCoroutine(ReloadWeapon());
+                _reloadCoroutine ??= StartCoroutine(ReloadWeaponRoutine());
 
         }
 
-        private IEnumerator ReloadWeapon()
+        private IEnumerator ReloadWeaponRoutine()
         {
-            print("Enemy Reloading Weapon...");
-
             while (_weapon.bulletsRemainingInMag < _weapon.maxBulletsInMag)
             {
                 _weapon.bulletsRemainingInMag++;
                 yield return new WaitForSeconds(_weapon.weapon.secondsGapInReloading);
             }
 
-            print("Enemy Weapon Reloaded...");
-
             _reloadCoroutine = null;
         }
 
-        private IEnumerator AttackPlayer()
+        private IEnumerator AttackPlayerRoutine()
         {
             _agent?.SetDestination(transform.position);
             _agent?.transform.LookAt(_player);
             while (_weapon.bulletsRemainingInMag > 0 && _isPlayerInAttackRange && _reloadCoroutine == null)
             {
-                AttackRoutine();
+                Attack();
                 yield return new WaitForSeconds(_weapon.weapon.secondsGapBetweenBullets);
             }
 
             _attackCoroutine = null;
         }
 
-        private void AttackRoutine()
+        private void Attack()
         {
-            _agent?.SetDestination(transform.position);
             _agent?.transform.LookAt(_player);
             Vector3 bulletDir = _camera.transform.forward +
             (_camera.transform.right * Random.Range(-0.02f, 0.02f)) +

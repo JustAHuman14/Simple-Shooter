@@ -12,7 +12,6 @@ namespace Assets.Scripts.UI
         private void Update()
     	{
             _loadingBarForeground.fillAmount = Mathf.Lerp(_loadingBarForeground.fillAmount, SceneChanger.Instance.sceneLoadProgress, Time.deltaTime * 10f);
-	    print(_loadingBarForeground.fillAmount);	
 			
             if (_loadingBarForeground.fillAmount > 0.99f)
             	

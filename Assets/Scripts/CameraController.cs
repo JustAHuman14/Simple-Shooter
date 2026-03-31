@@ -22,7 +22,6 @@ namespace Assets.Scripts
             Cursor.lockState = CursorLockMode.Locked;
             _gameInput = GlobalReferences.Instance.gameInput;
             _mouseSensitivity = GameManager.mouseSensitivity;
-            _gameInput.OnExit += ctx => Cursor.lockState = CursorLockMode.None;
             _playerPOV = GetComponent<Camera>();
         }
 

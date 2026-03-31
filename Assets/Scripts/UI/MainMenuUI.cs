@@ -8,13 +8,11 @@ namespace Assets.Scripts.UI
         [Header("Serialized Fields")]
         [SerializeField] private Button _startButton;
         [SerializeField] private Button _quitButton;
-        [SerializeField] private GameObject _loading;
 
         private void Awake()
         {
             _startButton.onClick.AddListener(() =>
             {
-                _loading.SetActive(true);
                 SceneChanger.Instance.LoadScene(1);
             });
 

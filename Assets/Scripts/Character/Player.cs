@@ -221,8 +221,8 @@ namespace Assets.Scripts.Character
             if (currentHealth <= 0)
             {
                 currentHealth = 0;
-                Cursor.lockState = CursorLockMode.Locked;
-                SceneManager.LoadScene(0);
+                Cursor.lockState = CursorLockMode.None;
+                SceneChanger.Instance.LoadScene(0);
             }
 
             StartCoroutine(PlayerDamagedRoutine(_playerMeshRenderer));
