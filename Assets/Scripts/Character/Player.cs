@@ -1,11 +1,9 @@
 using UnityEngine;
 using System;
-using TMPro;
 using Assets.Scripts.Interfaces;
 using UnityEngine.InputSystem;
 using Assets.Scripts.Weapon_Related;
 using System.Collections;
-using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Character
 {
@@ -15,7 +13,7 @@ namespace Assets.Scripts.Character
         [SerializeField] private LayerMask _groundLayerMask, _interactableLayerMask;
         [SerializeField] private Camera _playerCamera;
         [SerializeField] private float _groundValue = 1f, _groundRadius = 0.4f, _interactRadius = 2f;
-        [SerializeField] private Transform _primaryWeaponSlot1, _primaryWeaponSlot2, _secondaryWeaponSlot;
+        [SerializeField] private Transform _primaryWeaponSlot1, _primaryWeaponSlot2, _secondaryWeaponSlot, _throwablesSlot;
         [SerializeField] private float _playerSpeed;
         [SerializeField] private Enemy _enemy;
         [SerializeField] private MeshRenderer _playerHeadMeshRenderer, _playerTorsoMeshRenderer;
@@ -91,6 +89,7 @@ namespace Assets.Scripts.Character
             {
                 if (hit.collider.TryGetComponent(out IPickable pickable))
                 {
+                    if (pickable.IsPicked) return;
                     print($"Press \"E\" to Interact with {hit.collider.gameObject.name}");
                     OnGunInPickingRange?.Invoke(hit.collider.gameObject);
                     _isGunInPickingRange = true;
@@ -137,6 +136,13 @@ namespace Assets.Scripts.Character
                                 _isPickingWeapon = false;
                             }
                         }
+                        else if (hit.collider.TryGetComponent(out IThrowable throwable))
+                        {
+                            if (_throwablesSlot.childCount >= 1) return;
+
+                            pickable.Pick(_throwablesSlot);
+                            _isPickingWeapon = false;
+                        }
                     }
                 }
                 else
@@ -169,7 +175,6 @@ namespace Assets.Scripts.Character
             _primaryWeaponSlot1.gameObject.SetActive(weaponNum == 1);
             _primaryWeaponSlot2.gameObject.SetActive(weaponNum == 2);
             _secondaryWeaponSlot.gameObject.SetActive(weaponNum == 3);
-
             OnWeaponSwitch?.Invoke(weapon);
         }
 
@@ -193,7 +198,7 @@ namespace Assets.Scripts.Character
 
             if (_isJumping)
             {
-                _rb.AddForce(transform.up * _jumpForce, ForceMode.Impulse);
+                _rb.AddForce(transform.up * _jumpForce, ForceMode.VelocityChange);
                 _isJumping = false;
             }
         }

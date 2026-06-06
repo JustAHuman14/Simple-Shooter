@@ -10,6 +10,7 @@ namespace Assets.Scripts
         public GameInput gameInput;
         public GameObject pickupUI;
         public GameObject pauseMenuUI;
+        public ParticleSystem explosionEffect;
 
         public static GlobalReferences Instance { get; private set; }
 
