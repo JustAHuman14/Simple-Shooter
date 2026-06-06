@@ -4,7 +4,6 @@ namespace Assets.Scripts.Interfaces
 {
     public interface IPickable
     {
-        public void Pick(Transform weaponSlot);
-        public bool IsPicked { get; }
+        public void Pick(Transform player);
     }
 }

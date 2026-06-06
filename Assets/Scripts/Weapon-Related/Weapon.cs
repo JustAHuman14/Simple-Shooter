@@ -2,18 +2,19 @@ using System;
 using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using UnityEngine.EventSystems;
 using Assets.Scripts.Interfaces;
 using Assets.Scripts.Character;
 using UnityEngine.InputSystem;
+using Assets.Scripts.UI;
 
 namespace Assets.Scripts.Weapon_Related
 {
     public class Weapon : MonoBehaviour, IPickable
     {
         [Header("Serialized Fields")]
-        [SerializeField] private ParticleSystem _muzzleFlashEffect;
+        [SerializeField] private GameObject _muzzleFlash;
         [SerializeField] private LayerMask _shootLayerMask;
-        [SerializeField] private float _force;
 
         [Header("Non-Serialized Fields")]
         private float _dropForce;
@@ -24,9 +25,10 @@ namespace Assets.Scripts.Weapon_Related
         private Coroutine _shootCoroutine;
         private Coroutine _reloadCoroutine;
         private AudioSource _audioSource;
+        private ParticleSystem _muzzleFlashEffect;
         public event Action<Weapon> OnShoot;
         public event Action<Weapon> OnReload;
-        public bool IsPicked { get; private set; }
+        private bool _isPicked;
         private Rigidbody _rb;
         private Collider _collider;
         private Rigidbody _playerRb;
@@ -42,6 +44,7 @@ namespace Assets.Scripts.Weapon_Related
             _dropForce = 3;
             _playerRb = GameObject.Find(nameof(Player)).GetComponent<Rigidbody>();
             _audioSource = GetComponent<AudioSource>();
+            _muzzleFlashEffect = _muzzleFlash.GetComponent<ParticleSystem>();
             _rb = GetComponent<Rigidbody>();
             _collider = GetComponent<Collider>();
             maxBulletsInMag = weapon.maxBulletsInMag;
@@ -59,18 +62,19 @@ namespace Assets.Scripts.Weapon_Related
 
         private void Update()
         {
-            if (IsPicked) HandleShootingAndReload();
+            if (_isPicked) HandleShootingAndReload();
+
             HandleWeaponDrop();
         }
 
         private void HandleWeaponDrop()
         {
-            if (IsPicked && _gameInput.IsPlayerDroppingWeapon())
+            if (_isPicked && _gameInput.IsPlayerDroppingWeapon())
             {
                 StopCoroutines();
                 transform.localRotation = Quaternion.Euler(10, 90, 0);
                 transform.parent = null;
-                IsPicked = false;
+                _isPicked = false;
                 _rb.isKinematic = false;
                 _collider.isTrigger = false;
                 _rb.velocity = _playerRb.velocity;
@@ -120,17 +124,12 @@ namespace Assets.Scripts.Weapon_Related
             float spreadDensityX = _gameInput.IsPlayerAiming() ? 0.01f : weapon.spreadDensityX;
             float spreadDensityY = _gameInput.IsPlayerAiming() ? 0.01f : weapon.spreadDensityY;
 
-            _bulletDirection = _playerCamera.transform.forward +
+            Vector3 bulletDir = _playerCamera.transform.forward +
             (_playerCamera.transform.right * Random.Range(-spreadDensityX, spreadDensityX)) +
             (_playerCamera.transform.up * Random.Range(0, spreadDensityY));
 
-            if (Physics.Raycast(_playerCamera.transform.position, _bulletDirection, out RaycastHit hit, weapon.bulletRange))
+            if (Physics.Raycast(_playerCamera.transform.position, bulletDir, out RaycastHit hit, weapon.bulletRange))
             {
-                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
-                {
-                    Rigidbody ragdollRb = hit.collider.attachedRigidbody;
-                    ragdollRb.AddForceAtPosition(_bulletDirection * _force, hit.point, ForceMode.Impulse);
-                }
                 IDamageable damageable = hit.collider.GetComponentInParent<IDamageable>();
 
                 damageable?.Damage(hit);
@@ -144,6 +143,7 @@ namespace Assets.Scripts.Weapon_Related
                     );
 
                     bulletImpactInstance.SetParent(hit.transform);
+
                 }
             }
 
@@ -172,12 +172,10 @@ namespace Assets.Scripts.Weapon_Related
 
         public void Pick(Transform weaponSlot)
         {
-            if (IsPicked) return;
-
             transform.SetParent(weaponSlot);
             transform.localPosition = weapon.gunPosition;
             transform.localRotation = Quaternion.Euler(0, 180, 0);
-            IsPicked = true;
+            _isPicked = true;
             _rb.isKinematic = true;
             _collider.isTrigger = true;
             _playerCamera = GetComponentInParent<Player>().GetComponentInChildren<Camera>();
@@ -188,7 +186,10 @@ namespace Assets.Scripts.Weapon_Related
             }
         }
 
-        private void OnDisable() => StopCoroutines();
+        private void OnDisable()
+        {
+            StopCoroutines();
+        }
 
         private void OnDestroy()
         {

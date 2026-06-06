@@ -137,11 +137,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d4f7894ab8d077b48cb83aa45417f28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _muzzleFlashEffect: {fileID: 8936105970064718891}
+  _muzzleFlash: {fileID: 8905183022848476365}
   _shootLayerMask:
     serializedVersion: 2
     m_Bits: 264
-  _force: 40
   maxBulletsInMag: 0
   bulletsRemainingInMag: 0
   weapon: {fileID: 11400000, guid: 08c691d670341b01485bda4210998c04, type: 2}
