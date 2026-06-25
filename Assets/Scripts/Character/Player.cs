@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using TMPro;
 using Assets.Scripts.Interfaces;
 using UnityEngine.InputSystem;
 using Assets.Scripts.Weapon_Related;
@@ -17,6 +18,7 @@ namespace Assets.Scripts.Character
         [SerializeField] private float _playerSpeed;
         [SerializeField] private Enemy _enemy;
         [SerializeField] private MeshRenderer _playerHeadMeshRenderer, _playerTorsoMeshRenderer;
+        [SerializeField] private TextMeshProUGUI _fpsText;
 
         // Non-Serialized Fields
         private GameInput _gameInput;
@@ -28,7 +30,10 @@ namespace Assets.Scripts.Character
         private GameObject _pickupUI;
         private bool _isPickingWeapon;
         private readonly float _colorChangedAfterDamageSeconds = 0.05f;
+        private Coroutine _fpsCoroutine;
         public float maxHealth = 200f, currentHealth;
+        private int _frameCount;
+
         public event Action<Weapon> OnWeaponSwitch, OnWeaponShoot, OnWeaponReload;
         public event Action<GameObject> OnGunInPickingRange;
         public event Action OnDamage;
@@ -50,6 +55,7 @@ namespace Assets.Scripts.Character
             _gameInput.OnJump += ctx => _isJumping = _isGrounded;
             _gameInput.OnSpawnEnemy += SpawnEnemy;
             _gameInput.OnWeaponPick += ctx => _isPickingWeapon = true;
+            StartCoroutine(FPSRoutine());
         }
 
         private void SpawnEnemy(InputAction.CallbackContext context)
@@ -65,10 +71,31 @@ namespace Assets.Scripts.Character
 
         private void Update()
         {
-            HandleSpeedAndDirection();
-            HandleInteraction();
+            _frameCount++;
 
-            _pickupUI.SetActive(_isGunInPickingRange);
+            if (Time.timeScale != 0)
+            {
+                HandleSpeedAndDirection();      
+                HandleInteraction();
+                _pickupUI.SetActive(_isGunInPickingRange);
+            }
+        }
+
+        private IEnumerator FPSRoutine()
+        {
+            float lastInterval = Time.unscaledTime;
+            float interval = 0.4f;
+            
+            while (true)
+            {
+                yield return new WaitForSecondsRealtime(interval);
+
+                float timeElapsed = Time.unscaledTime - lastInterval;
+                int fps = (int)(_frameCount / interval);
+                _fpsText.text = $"FPS {fps}";
+                _frameCount = 0;
+                lastInterval = Time.unscaledTime;
+            }
         }
 
         private void FixedUpdate()
@@ -90,7 +117,7 @@ namespace Assets.Scripts.Character
                 if (hit.collider.TryGetComponent(out IPickable pickable))
                 {
                     if (pickable.IsPicked) return;
-                    print($"Press \"E\" to Interact with {hit.collider.gameObject.name}");
+
                     OnGunInPickingRange?.Invoke(hit.collider.gameObject);
                     _isGunInPickingRange = true;
 

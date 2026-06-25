@@ -143,6 +143,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ResetRagdoll"",
+                    ""type"": ""Button"",
+                    ""id"": ""e27ff005-8220-42f1-9ecc-5fcd2157e407"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -464,6 +473,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Aim"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9d653528-8289-4622-bb31-9dad976c253f"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ResetRagdoll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -485,6 +505,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Exit = m_Player.FindAction("Exit", throwIfNotFound: true);
         m_Player_SpawnEnemy = m_Player.FindAction("SpawnEnemy", throwIfNotFound: true);
         m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
+        m_Player_ResetRagdoll = m_Player.FindAction("ResetRagdoll", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -559,6 +580,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Exit;
     private readonly InputAction m_Player_SpawnEnemy;
     private readonly InputAction m_Player_Aim;
+    private readonly InputAction m_Player_ResetRagdoll;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -576,6 +598,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Exit => m_Wrapper.m_Player_Exit;
         public InputAction @SpawnEnemy => m_Wrapper.m_Player_SpawnEnemy;
         public InputAction @Aim => m_Wrapper.m_Player_Aim;
+        public InputAction @ResetRagdoll => m_Wrapper.m_Player_ResetRagdoll;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -624,6 +647,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Aim.started += instance.OnAim;
             @Aim.performed += instance.OnAim;
             @Aim.canceled += instance.OnAim;
+            @ResetRagdoll.started += instance.OnResetRagdoll;
+            @ResetRagdoll.performed += instance.OnResetRagdoll;
+            @ResetRagdoll.canceled += instance.OnResetRagdoll;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -667,6 +693,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Aim.started -= instance.OnAim;
             @Aim.performed -= instance.OnAim;
             @Aim.canceled -= instance.OnAim;
+            @ResetRagdoll.started -= instance.OnResetRagdoll;
+            @ResetRagdoll.performed -= instance.OnResetRagdoll;
+            @ResetRagdoll.canceled -= instance.OnResetRagdoll;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -699,5 +728,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnExit(InputAction.CallbackContext context);
         void OnSpawnEnemy(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
+        void OnResetRagdoll(InputAction.CallbackContext context);
     }
 }

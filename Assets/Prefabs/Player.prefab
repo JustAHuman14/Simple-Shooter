@@ -360,6 +360,7 @@ MonoBehaviour:
   _enemy: {fileID: 3529775451546520615, guid: 797a63aefc2555ca089a91943e63cf1b, type: 3}
   _playerHeadMeshRenderer: {fileID: 3298872856046802434}
   _playerTorsoMeshRenderer: {fileID: 3298872854704112528}
+  _fpsText: {fileID: 0}
   maxHealth: 200
   currentHealth: 0
 --- !u!54 &3298872854503315577
@@ -370,7 +371,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3298872854503315578}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -507,7 +508,6 @@ GameObject:
   - component: {fileID: 3298872854912826746}
   - component: {fileID: 3298872854912826743}
   - component: {fileID: 3298872854912826744}
-  - component: {fileID: 3298872854912826745}
   m_Layer: 6
   m_Name: Right Eye
   m_TagString: Untagged
@@ -580,19 +580,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &3298872854912826745
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3298872854912826747}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3298872855090633971
 GameObject:
   m_ObjectHideFlags: 0
@@ -813,7 +800,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.295
   far clip plane: 1000
   field of view: 60.000004
   orthographic: 0
@@ -1002,7 +989,6 @@ GameObject:
   - component: {fileID: 3298872856243040324}
   - component: {fileID: 3298872856243040321}
   - component: {fileID: 3298872856243040322}
-  - component: {fileID: 3298872856243040323}
   m_Layer: 6
   m_Name: 'Left Eye '
   m_TagString: Untagged
@@ -1075,19 +1061,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &3298872856243040323
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3298872856243040325}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3446260615799571316
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,7 +16,9 @@ namespace Assets.Scripts.Weapon_Related
         [SerializeField] private float _blastRadius;
         [SerializeField] private float _explosionForce;
         [SerializeField] private LayerMask _enemyLayerMask;
+        [SerializeField] private GameObject _grenadeGameObject;
         [SerializeField] private ParticleSystem _explosionEffect;
+        [SerializeField] private GameObject _pin;
 
         //Non-Serialized Field
         private Rigidbody _rb;
@@ -25,6 +27,7 @@ namespace Assets.Scripts.Weapon_Related
         private Camera _playerCamera;
         private Transform[] _children;
         private bool _isTicking;
+        private bool _isThrowing;
         public bool IsPicked { get; private set; }
 
         private void Start()
@@ -37,19 +40,24 @@ namespace Assets.Scripts.Weapon_Related
 
         private void Update()
         {
-            if (IsPicked && GlobalReferences.Instance.gameInput.IsPlayerAttacking())
-                Throw();
+            if (Time.timeScale != 0 && IsPicked && !_isTicking && GlobalReferences.Instance.gameInput.IsPlayerAttacking())
+                _isThrowing = true;
         }
 
-        private void OnDrawGizmos()
+        private void FixedUpdate()
         {
-            // Gizmos.DrawSphere(transform.position, _blastRadius);
+            if (_isThrowing)
+            {
+                Throw();
+                _isThrowing = false;
+            }
         }
 
         public void Throw()
         {
             IsPicked = false;
-            _isTicking = !_isTicking;
+            _isTicking = true;
+            Destroy(_pin);
             transform.parent = null;
             _rb.isKinematic = false;
             _collider.isTrigger = false;
@@ -61,19 +69,25 @@ namespace Assets.Scripts.Weapon_Related
                 child.gameObject.layer = 0;
             }
 
-            if (_isTicking)
-                StartCoroutine(GrenadeBlastRoutine());
+            StartCoroutine(GrenadeBlastRoutine());
         }
 
         private IEnumerator GrenadeBlastRoutine()
         {
-            yield return new WaitForSeconds(3.6f);
-            Debug.Log("Boom!");
-            Collider[] colliders = Physics.OverlapSphere(transform.position, _blastRadius, _enemyLayerMask);
+            yield return new WaitForSeconds(3.8f);
 
-            _explosionEffect = Instantiate(GlobalReferences.Instance.explosionEffect, transform.position, Quaternion.identity);
-	    _explosionEffect.GetComponent<AudioSource>().Play();
-	    yield return new WaitForSeconds(0.4f);
+            _explosionEffect.GetComponent<AudioSource>().Play();
+
+            yield return new WaitForSeconds(0.2f);
+
+            _explosionEffect.transform.parent = null;
+            _explosionEffect.transform.position = transform.position;
+
+            Destroy(_grenadeGameObject);
+
+            Collider[] colliders = Physics.OverlapSphere(transform.position, _blastRadius, _enemyLayerMask);
+            _explosionEffect.transform.localScale = new(4.7f, 4.7f, 4.7f);
+            _explosionEffect.transform.rotation = Quaternion.Euler(0, 0, 0);
             _explosionEffect.Play();
 
             foreach (Collider collider in colliders)
@@ -85,8 +99,8 @@ namespace Assets.Scripts.Weapon_Related
                 }
             }
 
-            yield return new WaitForSeconds(0.9f);
-            Destroy(_explosionEffect);
+            yield return new WaitForSeconds(2f);
+            Destroy(_explosionEffect.gameObject);
             Destroy(gameObject);
         }
 
@@ -97,6 +111,8 @@ namespace Assets.Scripts.Weapon_Related
             transform.SetParent(weaponSlot);
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.Euler(0, 180, 0);
+            _grenadeGameObject.transform.localPosition = Vector3.zero;
+            _grenadeGameObject.transform.localRotation = Quaternion.Euler(0, 180, 0);
             IsPicked = true;
             _rb.isKinematic = true;
             _collider.isTrigger = true;

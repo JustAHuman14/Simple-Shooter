@@ -129,10 +129,13 @@ namespace Assets.Scripts.Weapon_Related
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                 {
                     Rigidbody ragdollRb = hit.collider.attachedRigidbody;
-                    ragdollRb.AddForceAtPosition(_bulletDirection * _force, hit.point, ForceMode.Impulse);
+                    NPC npc = hit.collider.gameObject.GetComponentInParent<NPC>();
+                    npc?.TurnToRagdoll(_collider);
+                    Physics.SyncTransforms();
+                    ragdollRb?.AddForceAtPosition(_bulletDirection * _force, hit.point, ForceMode.Impulse);
                 }
+                
                 IDamageable damageable = hit.collider.GetComponentInParent<IDamageable>();
-
                 damageable?.Damage(hit);
 
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))

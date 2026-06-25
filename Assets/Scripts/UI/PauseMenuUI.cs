@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using System;
+using UnityEngine.Rendering.Universal;
 
 namespace Assets.Scripts.UI
 {
@@ -12,7 +13,9 @@ namespace Assets.Scripts.UI
         [SerializeField] private Button _mainMenuBtn;
         [SerializeField] private Button _resumeBtn;
         [SerializeField] private Slider _mouseSensitivitySlider;
-	
+        [SerializeField] private Toggle _postProcessingToggle;
+        [SerializeField] private UniversalAdditionalCameraData _playerCameraData;
+
         private void Start()
         {
             _mouseSensitivitySlider.value = PlayerPrefs.GetFloat("mouseSensitivity");
@@ -31,6 +34,8 @@ namespace Assets.Scripts.UI
             _resumeBtn.onClick.AddListener(() => GameResume());
             _mouseSensitivitySlider.onValueChanged.AddListener(ctx => GameManager.mouseSensitivity = ctx);
         }
+
+        private void Update() => _playerCameraData.renderPostProcessing = _postProcessingToggle.isOn;
 
         private void ToggleMenu(InputAction.CallbackContext context)
         {
