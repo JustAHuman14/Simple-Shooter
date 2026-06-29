@@ -40,7 +40,8 @@ namespace Assets.Scripts.Weapon_Related
 
         private void Update()
         {
-            if (Time.timeScale != 0 && IsPicked && !_isTicking && GlobalReferences.Instance.gameInput.IsPlayerAttacking())
+            if (Time.timeScale != 0 && IsPicked && !_isTicking &&
+                GlobalReferences.Instance.gameInput.IsPlayerAttacking())
                 _isThrowing = true;
         }
 
@@ -95,7 +96,11 @@ namespace Assets.Scripts.Weapon_Related
                 if (collider.TryGetComponent(out Rigidbody rigidbody))
                 {
                     if (rigidbody != _rb)
-                        rigidbody.AddExplosionForce(_explosionForce, transform.position, _blastRadius, _upwardsModifier, ForceMode.Impulse);
+                    {
+                        rigidbody.GetComponentInParent<NPC>()?.TurnToRagdoll(_collider);
+                        rigidbody.AddExplosionForce(_explosionForce, transform.position, _blastRadius, _upwardsModifier,
+                            ForceMode.Impulse);
+                    }
                 }
             }
 

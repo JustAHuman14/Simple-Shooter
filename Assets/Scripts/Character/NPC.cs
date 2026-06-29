@@ -20,7 +20,6 @@ namespace Assets.Scripts.Character
             foreach (Rigidbody bone in _ragdollBones)
             {
                 bone.isKinematic = true;
-                bone.gameObject.AddComponent<Joints>();
             }
         }
 
@@ -45,7 +44,7 @@ namespace Assets.Scripts.Character
                 }
 
                 transform.localRotation = Quaternion.Euler(0, -90, 0);
-                transform.position = Vector3.zero;
+                transform.localPosition = Vector3.zero;
                 _animator.enabled = true;
                 _animator.Update(0);
                 Physics.SyncTransforms();
@@ -55,7 +54,7 @@ namespace Assets.Scripts.Character
         }
 
         private void OnCollisionEnter(Collision other)
-        {     
+        {
             TurnToRagdoll(other.collider);
         }
 
@@ -65,6 +64,8 @@ namespace Assets.Scripts.Character
             {
                 if (other.gameObject.layer == _groundLayer) return;
                 if (other == bone.GetComponent<Collider>()) return;
+
+                bone.gameObject.GetComponentInChildren<Collider>().enabled = true;
             }
 
             _animator.enabled = false;
@@ -72,6 +73,7 @@ namespace Assets.Scripts.Character
             foreach (Rigidbody bone in _ragdollBones)
             {
                 bone.isKinematic = false;
+                bone.maxDepenetrationVelocity = 100f;
             }
 
             _collider.enabled = false;
