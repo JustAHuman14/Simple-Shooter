@@ -27,7 +27,7 @@ namespace Assets.Scripts.UI
 
         private void UpdateTotalAmmo(Weapon weapon)
         {
-            _text.text = $"{weapon.bulletsRemainingInMag}/{weapon.maxBulletsInMag}";
+            _text.text = $"{weapon.BulletsRemainingInMag}/{weapon.MaxBulletsInMag}";
         }
 
         private void OnDestroy()

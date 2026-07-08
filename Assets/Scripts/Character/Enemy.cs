@@ -64,17 +64,17 @@ namespace Assets.Scripts.Character
             else if (_isPlayerInAttackRange)
                 _attackCoroutine ??= StartCoroutine(AttackPlayerRoutine());
 
-            if (_weapon.bulletsRemainingInMag == 0)
+            if (_weapon.BulletsRemainingInMag == 0)
                 _reloadCoroutine ??= StartCoroutine(ReloadWeaponRoutine());
 
         }
 
         private IEnumerator ReloadWeaponRoutine()
         {
-            while (_weapon.bulletsRemainingInMag < _weapon.maxBulletsInMag)
+            while (_weapon.BulletsRemainingInMag < _weapon.MaxBulletsInMag)
             {
-                _weapon.bulletsRemainingInMag++;
-                yield return new WaitForSeconds(_weapon.weapon.secondsGapInReloading);
+                _weapon.BulletsRemainingInMag++;
+                yield return new WaitForSeconds(_weapon.WeaponSo.secondsGapInReloading);
             }
 
             _reloadCoroutine = null;
@@ -84,10 +84,10 @@ namespace Assets.Scripts.Character
         {
             _agent?.SetDestination(transform.position);
             _agent?.transform.LookAt(_player);
-            while (_weapon.bulletsRemainingInMag > 0 && _isPlayerInAttackRange && _reloadCoroutine == null)
+            while (_weapon.BulletsRemainingInMag > 0 && _isPlayerInAttackRange && _reloadCoroutine == null)
             {
                 Attack();
-                yield return new WaitForSeconds(_weapon.weapon.secondsGapBetweenBullets);
+                yield return new WaitForSeconds(_weapon.WeaponSo.secondsGapBetweenBullets);
             }
 
             _attackCoroutine = null;
@@ -103,11 +103,11 @@ namespace Assets.Scripts.Character
             if (Physics.Raycast(_camera.transform.position, bulletDir, out RaycastHit hit, _attackRange))
             {
                 IDamageable damagebale = hit.collider.GetComponentInParent<IDamageable>();
-                _weapon.bulletsRemainingInMag--;
+                _weapon.BulletsRemainingInMag--;
                 _weaponAudio.PlayOneShot(_weaponAudio.clip);
                 _muzzleFlashEffect.Play();
                 damagebale?.Damage(hit);
-                print($"Enemy bullets: {_weapon.bulletsRemainingInMag}");
+                print($"Enemy bullets: {_weapon.BulletsRemainingInMag}");
             }
         }
 

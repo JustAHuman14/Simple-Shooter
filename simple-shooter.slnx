@@ -1,0 +1,17 @@
+﻿<Solution>
+  <Project Path="UnityEngine.UI.csproj" />
+  <Project Path="Unity.RenderPipelines.Core.Runtime.csproj" />
+  <Project Path="Unity.RenderPipelines.Universal.Runtime.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Unity.RenderPipeline.Universal.ShaderLibrary.csproj" />
+  <Project Path="Unity.RenderPipelines.Core.ShaderLibrary.csproj" />
+  <Project Path="Unity.RenderPipelines.Universal.Shaders.csproj" />
+  <Project Path="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.csproj" />
+  <Project Path="Unity.ShaderGraph.Editor.csproj" />
+  <Project Path="Unity.RenderPipelines.Universal.Editor.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="Unity.RenderPipelines.Core.Editor.csproj" />
+  <Project Path="UnityEditor.UI.csproj" />
+  <Project Path="PPv2URPConverters.csproj" />
+  <Project Path="Unity.ShaderGraph.Utilities.csproj" />
+</Solution>

@@ -4,23 +4,26 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 using Assets.Scripts.Interfaces;
 using Assets.Scripts.Character;
+using JetBrains.Annotations;
 using UnityEngine.InputSystem;
 
 namespace Assets.Scripts.Weapon_Related
 {
-    public class Weapon : MonoBehaviour, IPickable
+    public class Weapon : MonoBehaviour, IPickable, IWeapon
     {
         [Header("Serialized Fields")]
+#pragma warning disable CS0649
         [SerializeField] private ParticleSystem _muzzleFlashEffect;
         [SerializeField] private LayerMask _shootLayerMask;
         [SerializeField] private float _force;
+#pragma warning restore CS0649
 
         [Header("Non-Serialized Fields")]
         private float _dropForce;
         private GameInput _gameInput;
         private Vector3 _bulletDirection;
-        public int maxBulletsInMag;
-        public int bulletsRemainingInMag;
+        public int MaxBulletsInMag;
+        public int BulletsRemainingInMag;
         private Coroutine _shootCoroutine;
         private Coroutine _reloadCoroutine;
         private AudioSource _audioSource;
@@ -31,11 +34,12 @@ namespace Assets.Scripts.Weapon_Related
         private Collider _collider;
         private Rigidbody _playerRb;
         private Camera _playerCamera;
-        public WeaponSO weapon;
+        public WeaponSO WeaponSo;
         private Transform[] _children;
         private bool _isPlayerTryingToQuit;
-        private GameObject _pauseMenuUI;
+        private GameObject _pauseMenuUi;
 
+        [UsedImplicitly]
         private void Awake()
         {
             _children = gameObject.GetComponentsInChildren<Transform>(true);
@@ -44,19 +48,21 @@ namespace Assets.Scripts.Weapon_Related
             _audioSource = GetComponent<AudioSource>();
             _rb = GetComponent<Rigidbody>();
             _collider = GetComponent<Collider>();
-            maxBulletsInMag = weapon.maxBulletsInMag;
-            bulletsRemainingInMag = maxBulletsInMag;
+            MaxBulletsInMag = WeaponSo.maxBulletsInMag;
+            BulletsRemainingInMag = MaxBulletsInMag;
         }
 
+        [UsedImplicitly]
         private void Start()
         {
             _gameInput = GlobalReferences.Instance.gameInput;
-            _pauseMenuUI = GlobalReferences.Instance.pauseMenuUI;
+            _pauseMenuUi = GlobalReferences.Instance.pauseMenuUI;
             _gameInput.OnExit += OnExit;
         }
 
         private void OnExit(InputAction.CallbackContext context) => StopCoroutines();
 
+        [UsedImplicitly]
         private void Update()
         {
             if (IsPicked) HandleShootingAndReload();
@@ -65,21 +71,19 @@ namespace Assets.Scripts.Weapon_Related
 
         private void HandleWeaponDrop()
         {
-            if (IsPicked && _gameInput.IsPlayerDroppingWeapon())
-            {
-                StopCoroutines();
-                transform.localRotation = Quaternion.Euler(10, 90, 0);
-                transform.parent = null;
-                IsPicked = false;
-                _rb.isKinematic = false;
-                _collider.isTrigger = false;
-                _rb.velocity = _playerRb.velocity;
-                _rb.AddForce(_playerCamera.transform.forward * _dropForce, ForceMode.Impulse);
+            if (!IsPicked || !_gameInput.IsPlayerDroppingWeapon()) return;
+            StopCoroutines();
+            transform.localRotation = Quaternion.Euler(10, 90, 0);
+            transform.parent = null;
+            IsPicked = false;
+            _rb.isKinematic = false;
+            _collider.isTrigger = false;
+            _rb.velocity = _playerRb.velocity;
+            _rb.AddForce(_playerCamera.transform.forward * _dropForce, ForceMode.Impulse);
 
-                foreach (Transform child in _children)
-                {
-                    child.gameObject.layer = 0;
-                }
+            foreach (Transform child in _children)
+            {
+                child.gameObject.layer = 0;
             }
         }
 
@@ -92,11 +96,11 @@ namespace Assets.Scripts.Weapon_Related
 
         private void HandleShootingAndReload()
         {
-            _isPlayerTryingToQuit = _pauseMenuUI.activeInHierarchy;
-            if (_gameInput.IsPlayerAttacking() && _reloadCoroutine == null && bulletsRemainingInMag > 0 && !_isPlayerTryingToQuit)
+            _isPlayerTryingToQuit = _pauseMenuUi.activeInHierarchy;
+            if (_gameInput.IsPlayerAttacking() && _reloadCoroutine == null && BulletsRemainingInMag > 0 && !_isPlayerTryingToQuit)
                 _shootCoroutine ??= StartCoroutine(ShootRoutine());
 
-            if (_gameInput.IsPlayerReloading() && bulletsRemainingInMag < weapon.maxBulletsInMag && _shootCoroutine == null && !_isPlayerTryingToQuit)
+            if (_gameInput.IsPlayerReloading() && BulletsRemainingInMag < WeaponSo.maxBulletsInMag && _shootCoroutine == null && !_isPlayerTryingToQuit)
                 _reloadCoroutine ??= StartCoroutine(ReloadRoutine());
         }
 
@@ -104,12 +108,12 @@ namespace Assets.Scripts.Weapon_Related
         {
             FireOneBullet();
 
-            yield return new WaitForSeconds(weapon.secondsGapBetweenBullets);
+            yield return new WaitForSeconds(WeaponSo.secondsGapBetweenBullets);
 
-            while (_gameInput.IsPlayerAttacking() && bulletsRemainingInMag > 0)
+            while (_gameInput.IsPlayerAttacking() && BulletsRemainingInMag > 0)
             {
                 FireOneBullet();
-                yield return new WaitForSeconds(weapon.secondsGapBetweenBullets);
+                yield return new WaitForSeconds(WeaponSo.secondsGapBetweenBullets);
             }
 
             _shootCoroutine = null;
@@ -117,14 +121,14 @@ namespace Assets.Scripts.Weapon_Related
 
         private void FireOneBullet()
         {
-            float spreadDensityX = _gameInput.IsPlayerAiming() ? 0.01f : weapon.spreadDensityX;
-            float spreadDensityY = _gameInput.IsPlayerAiming() ? 0.01f : weapon.spreadDensityY;
+            float spreadDensityX = _gameInput.IsPlayerAiming() ? 0.01f : WeaponSo.spreadDensityX;
+            float spreadDensityY = _gameInput.IsPlayerAiming() ? 0.01f : WeaponSo.spreadDensityY;
 
             _bulletDirection = _playerCamera.transform.forward +
             (_playerCamera.transform.right * Random.Range(-spreadDensityX, spreadDensityX)) +
             (_playerCamera.transform.up * Random.Range(0, spreadDensityY));
 
-            if (Physics.Raycast(_playerCamera.transform.position, _bulletDirection, out RaycastHit hit, weapon.bulletRange))
+            if (Physics.Raycast(_playerCamera.transform.position, _bulletDirection, out RaycastHit hit, WeaponSo.bulletRange))
             {
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                 {
@@ -150,18 +154,18 @@ namespace Assets.Scripts.Weapon_Related
                 }
             }
 
-            bulletsRemainingInMag--;
+            BulletsRemainingInMag--;
             OnShoot?.Invoke(this);
             PlayEffectsAfterFiring();
         }
 
         private IEnumerator ReloadRoutine()
         {
-            while (bulletsRemainingInMag < weapon.maxBulletsInMag)
+            while (BulletsRemainingInMag < WeaponSo.maxBulletsInMag)
             {
-                bulletsRemainingInMag++;
+                BulletsRemainingInMag++;
                 OnReload?.Invoke(this);
-                yield return new WaitForSeconds(weapon.secondsGapInReloading);
+                yield return new WaitForSeconds(WeaponSo.secondsGapInReloading);
             }
 
             _reloadCoroutine = null;
@@ -178,7 +182,7 @@ namespace Assets.Scripts.Weapon_Related
             if (IsPicked) return;
 
             transform.SetParent(weaponSlot);
-            transform.localPosition = weapon.gunPosition;
+            transform.localPosition = WeaponSo.gunPosition;
             transform.localRotation = Quaternion.Euler(0, 180, 0);
             IsPicked = true;
             _rb.isKinematic = true;
@@ -191,8 +195,10 @@ namespace Assets.Scripts.Weapon_Related
             }
         }
 
+        [UsedImplicitly]
         private void OnDisable() => StopCoroutines();
 
+        [UsedImplicitly]
         private void OnDestroy()
         {
             if (_gameInput != null)

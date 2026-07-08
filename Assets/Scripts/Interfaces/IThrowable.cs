@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace Assets.Scripts.Interfaces
 {
-    public interface IThrowable
+    public interface IThrowable : IWeapon
     {
         public void Throw();
     }

@@ -1,16 +1,15 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Interfaces;
 using Assets.Scripts.Character;
-using System;
-using Unity.Mathematics;
+using JetBrains.Annotations;
 
 namespace Assets.Scripts.Weapon_Related
 {
     public class Grenade : MonoBehaviour, IThrowable, IPickable
     {
         //Serialized Field
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
         [SerializeField] private float _throwForce;
         [SerializeField] private float _upwardsModifier;
         [SerializeField] private float _blastRadius;
@@ -19,6 +18,7 @@ namespace Assets.Scripts.Weapon_Related
         [SerializeField] private GameObject _grenadeGameObject;
         [SerializeField] private ParticleSystem _explosionEffect;
         [SerializeField] private GameObject _pin;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value
 
         //Non-Serialized Field
         private Rigidbody _rb;
@@ -30,6 +30,7 @@ namespace Assets.Scripts.Weapon_Related
         private bool _isThrowing;
         public bool IsPicked { get; private set; }
 
+        [UsedImplicitly]
         private void Start()
         {
             _rb = GetComponent<Rigidbody>();
@@ -38,6 +39,7 @@ namespace Assets.Scripts.Weapon_Related
             _children = GetComponentsInChildren<Transform>();
         }
 
+        [UsedImplicitly]
         private void Update()
         {
             if (Time.timeScale != 0 && IsPicked && !_isTicking &&
@@ -45,6 +47,7 @@ namespace Assets.Scripts.Weapon_Related
                 _isThrowing = true;
         }
 
+        [UsedImplicitly]
         private void FixedUpdate()
         {
             if (_isThrowing)
@@ -91,14 +94,14 @@ namespace Assets.Scripts.Weapon_Related
             _explosionEffect.transform.rotation = Quaternion.Euler(0, 0, 0);
             _explosionEffect.Play();
 
-            foreach (Collider collider in colliders)
+            foreach (Collider col in colliders)
             {
-                if (collider.TryGetComponent(out Rigidbody rigidbody))
+                if (col.TryGetComponent(out Rigidbody rb))
                 {
-                    if (rigidbody != _rb)
+                    if (rb != _rb)
                     {
-                        rigidbody.GetComponentInParent<NPC>()?.TurnToRagdoll(_collider);
-                        rigidbody.AddExplosionForce(_explosionForce, transform.position, _blastRadius, _upwardsModifier,
+                        rb.GetComponentInParent<NPC>()?.TurnToRagdoll(_collider);
+                        rb.AddExplosionForce(_explosionForce, transform.position, _blastRadius, _upwardsModifier,
                             ForceMode.Impulse);
                     }
                 }
