@@ -38,6 +38,7 @@ namespace Assets.Scripts.Weapon_Related
         private Transform[] _children;
         private bool _isPlayerTryingToQuit;
         private GameObject _pauseMenuUi;
+        public event Action OnWeaponDropped;
 
         [UsedImplicitly]
         private void Awake()
@@ -85,6 +86,7 @@ namespace Assets.Scripts.Weapon_Related
             {
                 child.gameObject.layer = 0;
             }
+            OnWeaponDropped?.Invoke();
         }
 
         private void StopCoroutines()

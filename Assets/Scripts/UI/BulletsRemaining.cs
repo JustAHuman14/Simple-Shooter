@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using Assets.Scripts.Character;
 using Assets.Scripts.Weapon_Related;
+using Assets.Scripts.Interfaces;
 
 namespace Assets.Scripts.UI
 {
@@ -25,9 +26,15 @@ namespace Assets.Scripts.UI
             _player.OnWeaponReload += UpdateTotalAmmo;
         }
 
-        private void UpdateTotalAmmo(Weapon weapon)
+        private void UpdateTotalAmmo(IWeapon iWeapon)
         {
-            _text.text = $"{weapon.BulletsRemainingInMag}/{weapon.MaxBulletsInMag}";
+            if (iWeapon is Weapon weapon)
+            {
+                _text.text = $"{weapon.BulletsRemainingInMag}/{weapon.MaxBulletsInMag}";
+                weapon.OnWeaponDropped += () => _text.text = "";
+            }
+            else 
+            	_text.text = "";
         }
 
         private void OnDestroy()

@@ -149,6 +149,7 @@ namespace Assets.Scripts.Character
                                 {
                                     case 0:
                                         pickable.Pick(_primaryWeaponSlot1);
+                                        weapon.OnWeaponDropped += () => _primaryWeapon1 = null;
                                         _primaryWeapon1 = weapon;
                                         WeaponSwitch(1, _primaryWeapon1);
                                         _isPickingWeapon = false;
@@ -156,6 +157,7 @@ namespace Assets.Scripts.Character
                                     case 1 when _primaryWeaponSlot2.childCount == 0:
                                         pickable.Pick(_primaryWeaponSlot2);
                                         _primaryWeapon2 = weapon;
+                                        weapon.OnWeaponDropped += () => _primaryWeapon2 = null;
                                         WeaponSwitch(2, _primaryWeapon2);
                                         _isPickingWeapon = false;
                                         break;
@@ -180,6 +182,7 @@ namespace Assets.Scripts.Character
 
                                 pickable.Pick(_secondaryWeaponSlot);
                                 _secondaryWeapon = weapon;
+                                weapon.OnWeaponDropped += () => _secondaryWeapon = null;
                                 WeaponSwitch(3, _secondaryWeapon);
                                 _isPickingWeapon = false;
                             }
@@ -227,6 +230,7 @@ namespace Assets.Scripts.Character
             _primaryWeaponSlot1.gameObject.SetActive((int)weaponNum == 1);
             _primaryWeaponSlot2.gameObject.SetActive((int)weaponNum == 2);
             _secondaryWeaponSlot.gameObject.SetActive((int)weaponNum == 3);
+            _throwablesSlot.gameObject.SetActive((int)weaponNum == 4);
             OnWeaponSwitch?.Invoke(weapon);
         }
 

@@ -142,9 +142,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 264
   _force: 40
-  maxBulletsInMag: 0
-  bulletsRemainingInMag: 0
-  weapon: {fileID: 11400000, guid: e3aaf9cd7cda18961849944fc0b02b55, type: 2}
+  MaxBulletsInMag: 0
+  BulletsRemainingInMag: 0
+  WeaponSo: {fileID: 11400000, guid: e3aaf9cd7cda18961849944fc0b02b55, type: 2}
 --- !u!33 &3416132227003470965
 MeshFilter:
   m_ObjectHideFlags: 0

@@ -475,9 +475,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 264
   _force: 40
-  maxBulletsInMag: 0
-  bulletsRemainingInMag: 0
-  weapon: {fileID: 11400000, guid: a916ae11094ca254280cc9d93d31748b, type: 2}
+  MaxBulletsInMag: 0
+  BulletsRemainingInMag: 0
+  WeaponSo: {fileID: 11400000, guid: a916ae11094ca254280cc9d93d31748b, type: 2}
 --- !u!82 &924020127842129262
 AudioSource:
   m_ObjectHideFlags: 0
