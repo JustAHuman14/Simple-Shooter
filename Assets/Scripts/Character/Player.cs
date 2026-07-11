@@ -23,11 +23,10 @@ namespace Assets.Scripts.Character
         [SerializeField] private Enemy _enemy;
         [SerializeField] private MeshRenderer _playerHeadMeshRenderer, _playerTorsoMeshRenderer;
         [SerializeField] private TextMeshProUGUI _fpsText;
+        [SerializeField] private float _groundValue = 1f;
+        [SerializeField] private float _groundRadius = 0.4f;
+        [SerializeField] private float _interactRadius = 3.5f;
 #pragma warning restore CS0649
-
-        [SerializeField] private readonly float _groundValue = 1f;
-        [SerializeField] private readonly float _groundRadius = 0.4f;
-        [SerializeField] private readonly float _interactRadius = 2f;
 
         // Non-Serialized Fields
         private GameInput _gameInput;
