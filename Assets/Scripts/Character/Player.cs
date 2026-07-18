@@ -192,6 +192,7 @@ namespace Assets.Scripts.Character
 
                             pickable.Pick(_throwablesSlot);
                             _tertiaryWeapon = throwable;
+                            throwable.OnThrow += () => _tertiaryWeapon = null;
                             WeaponSwitch(4, _secondaryWeapon);
                             _isPickingWeapon = false;
                         }

@@ -27,8 +27,8 @@ namespace Assets.Scripts
 
         private void Update()
         {
-            _playerPOV.fieldOfView = _gameInput.IsPlayerAiming() ? 30 : 60;
-            _gunCamera.fieldOfView = _gameInput.IsPlayerAiming() ? 30 : 60;
+            _playerPOV.fieldOfView = _gameInput.IsPlayerAiming() ? 60 : 90;
+            _gunCamera.fieldOfView = _gameInput.IsPlayerAiming() ? 50 : 80;
             _mouseSensitivity = GameManager.mouseSensitivity;
             HandleRotation();
 

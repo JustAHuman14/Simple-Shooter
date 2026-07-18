@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using Assets.Scripts.Interfaces;
@@ -29,6 +30,7 @@ namespace Assets.Scripts.Weapon_Related
         private bool _isTicking;
         private bool _isThrowing;
         public bool IsPicked { get; private set; }
+        public event Action OnThrow;
 
         [UsedImplicitly]
         private void Start()
@@ -60,6 +62,7 @@ namespace Assets.Scripts.Weapon_Related
         public void Throw()
         {
             IsPicked = false;
+            OnThrow?.Invoke();
             _isTicking = true;
             Destroy(_pin);
             transform.parent = null;

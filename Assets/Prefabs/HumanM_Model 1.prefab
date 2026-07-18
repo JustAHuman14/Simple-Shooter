@@ -45,9 +45,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.060999095
-  m_Height: 0.34633973
+  m_Height: 0.4
   m_Direction: 1
-  m_Center: {x: 1.5588761e-10, y: 0.009450838, z: -0.039000947}
+  m_Center: {x: 1.5588761e-10, y: 0.015, z: -0.039000947}
 --- !u!54 &1865093142
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -136,14 +136,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1748102931}
-  m_LocalRotation: {x: -0.28763852, y: -0.00000619376, z: -0.000003176508, w: 0.9577391}
+  m_LocalRotation: {x: -0.29237175, y: 0, z: 0, w: 0.9563048}
   m_LocalPosition: {x: 0.0067056394, y: 0.12102607, z: 0.05108799}
   m_LocalScale: {x: 1, y: 1.0000134, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4614993889802480942}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -33.433, y: -0.001, z: 0}
+  m_LocalEulerAnglesHint: {x: -34, y: 0, z: 0}
 --- !u!136 &1748102933
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -155,9 +155,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.060999095
-  m_Height: 0.34761944
+  m_Height: 0.4
   m_Direction: 1
-  m_Center: {x: 8.539194e-10, y: 0.010090711, z: -0.039000936}
+  m_Center: {x: 8.539194e-10, y: 0.015, z: -0.039000936}
 --- !u!54 &1094252613
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -328,8 +328,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.3784192, y: 0.45164907, z: 0.23553737}
-  m_Center: {x: 0.000021189238, y: 0.24429332, z: -0.0072987457}
+  m_Size: {x: 0.3744666, y: 0.4516491, z: 0.23553737}
+  m_Center: {x: 0.0019976979, y: 0.2442933, z: -0.0072987434}
 --- !u!54 &7003642277514802986
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -469,10 +469,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.058534574
-  m_Height: 0.24937887
+  m_Radius: 0.06
+  m_Height: 0.25298285
   m_Direction: 1
-  m_Center: {x: -0.0000000020736333, y: 0.10944884, z: 0.0000000011769778}
+  m_Center: {x: -0.0000000015454289, y: 0.10764641, z: 0.0000000012484052}
 --- !u!54 &495149470532305916
 Rigidbody:
   m_ObjectHideFlags: 0
