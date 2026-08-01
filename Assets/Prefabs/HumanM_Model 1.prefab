@@ -469,10 +469,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.06
-  m_Height: 0.25298285
+  m_Radius: 0.056759212
+  m_Height: 0.1870774
   m_Direction: 1
-  m_Center: {x: -0.0000000015454289, y: 0.10764641, z: 0.0000000012484052}
+  m_Center: {x: -0.008349706, y: 0.1405994, z: 0.005109112}
 --- !u!54 &495149470532305916
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -580,10 +580,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.06
-  m_Height: 0.25298285
+  m_Radius: 0.060123153
+  m_Height: 0.19698478
   m_Direction: 1
-  m_Center: {x: -0.0000000015454289, y: 0.10764641, z: 0.0000000012484052}
+  m_Center: {x: 0.007150575, y: 0.1356448, z: 0.0027754756}
 --- !u!54 &1302737221204802437
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2249,7 +2249,6 @@ GameObject:
   - component: {fileID: 6691134179305243432}
   - component: {fileID: 737327829905774930}
   - component: {fileID: 1519064427}
-  - component: {fileID: 2122285956}
   m_Layer: 8
   m_Name: HumanM_Model 1
   m_TagString: Untagged
@@ -2310,20 +2309,6 @@ MonoBehaviour:
   _groundLayer:
     serializedVersion: 2
     m_Bits: 8
---- !u!136 &2122285956
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6309683511150680466}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.4130728
-  m_Height: 1.877155
-  m_Direction: 1
-  m_Center: {x: 0.002847958, y: 0.8922445, z: 6.180978e-18}
 --- !u!1 &6385860371593391734
 GameObject:
   m_ObjectHideFlags: 0

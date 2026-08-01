@@ -49,15 +49,15 @@ namespace Assets.Scripts.Weapon_Related
             _audioSource = GetComponent<AudioSource>();
             _rb = GetComponent<Rigidbody>();
             _collider = GetComponent<Collider>();
-            MaxBulletsInMag = WeaponSo.maxBulletsInMag;
+            MaxBulletsInMag = WeaponSo.MaxBulletsInMag;
             BulletsRemainingInMag = MaxBulletsInMag;
         }
 
         [UsedImplicitly]
         private void Start()
         {
-            _gameInput = GlobalReferences.Instance.gameInput;
-            _pauseMenuUi = GlobalReferences.Instance.pauseMenuUI;
+            _gameInput = GlobalReferences.Instance.GameInput;
+            _pauseMenuUi = GlobalReferences.Instance.PauseMenuUi;
             _gameInput.OnExit += OnExit;
         }
 
@@ -102,7 +102,7 @@ namespace Assets.Scripts.Weapon_Related
             if (_gameInput.IsPlayerAttacking() && _reloadCoroutine == null && BulletsRemainingInMag > 0 && !_isPlayerTryingToQuit)
                 _shootCoroutine ??= StartCoroutine(ShootRoutine());
 
-            if (_gameInput.IsPlayerReloading() && BulletsRemainingInMag < WeaponSo.maxBulletsInMag && _shootCoroutine == null && !_isPlayerTryingToQuit)
+            if (_gameInput.IsPlayerReloading() && BulletsRemainingInMag < WeaponSo.MaxBulletsInMag && _shootCoroutine == null && !_isPlayerTryingToQuit)
                 _reloadCoroutine ??= StartCoroutine(ReloadRoutine());
         }
 
@@ -110,12 +110,12 @@ namespace Assets.Scripts.Weapon_Related
         {
             FireOneBullet();
 
-            yield return new WaitForSeconds(WeaponSo.secondsGapBetweenBullets);
+            yield return new WaitForSeconds(WeaponSo.SecondsGapBetweenBullets);
 
             while (_gameInput.IsPlayerAttacking() && BulletsRemainingInMag > 0)
             {
                 FireOneBullet();
-                yield return new WaitForSeconds(WeaponSo.secondsGapBetweenBullets);
+                yield return new WaitForSeconds(WeaponSo.SecondsGapBetweenBullets);
             }
 
             _shootCoroutine = null;
@@ -123,14 +123,14 @@ namespace Assets.Scripts.Weapon_Related
 
         private void FireOneBullet()
         {
-            float spreadDensityX = _gameInput.IsPlayerAiming() ? 0.01f : WeaponSo.spreadDensityX;
-            float spreadDensityY = _gameInput.IsPlayerAiming() ? 0.01f : WeaponSo.spreadDensityY;
+            float spreadDensityX = _gameInput.IsPlayerAiming() ? 0.01f : WeaponSo.SpreadDensityX;
+            float spreadDensityY = _gameInput.IsPlayerAiming() ? 0.01f : WeaponSo.SpreadDensityY;
 
             _bulletDirection = _playerCamera.transform.forward +
             (_playerCamera.transform.right * Random.Range(-spreadDensityX, spreadDensityX)) +
             (_playerCamera.transform.up * Random.Range(0, spreadDensityY));
 
-            if (Physics.Raycast(_playerCamera.transform.position, _bulletDirection, out RaycastHit hit, WeaponSo.bulletRange))
+            if (Physics.Raycast(_playerCamera.transform.position, _bulletDirection, out RaycastHit hit, WeaponSo.BulletRange))
             {
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                 {
@@ -147,7 +147,7 @@ namespace Assets.Scripts.Weapon_Related
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
                 {
                     Transform bulletImpactInstance = Instantiate(
-                        GlobalReferences.Instance.bulletImpactPrefab.transform,
+                        GlobalReferences.Instance.BulletImpactPrefab.transform,
                         hit.point + (hit.normal * 0.01f),
                         Quaternion.LookRotation(hit.normal)
                     );
@@ -163,11 +163,11 @@ namespace Assets.Scripts.Weapon_Related
 
         private IEnumerator ReloadRoutine()
         {
-            while (BulletsRemainingInMag < WeaponSo.maxBulletsInMag)
+            while (BulletsRemainingInMag < WeaponSo.MaxBulletsInMag)
             {
                 BulletsRemainingInMag++;
                 OnReload?.Invoke(this);
-                yield return new WaitForSeconds(WeaponSo.secondsGapInReloading);
+                yield return new WaitForSeconds(WeaponSo.SecondsGapInReloading);
             }
 
             _reloadCoroutine = null;
@@ -184,7 +184,7 @@ namespace Assets.Scripts.Weapon_Related
             if (IsPicked) return;
 
             transform.SetParent(weaponSlot);
-            transform.localPosition = WeaponSo.gunPosition;
+            transform.localPosition = WeaponSo.GunPosition;
             transform.localRotation = Quaternion.Euler(0, 180, 0);
             IsPicked = true;
             _rb.isKinematic = true;

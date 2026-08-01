@@ -5037,7 +5037,7 @@ MonoBehaviour:
   _shootLayerMask:
     serializedVersion: 2
     m_Bits: 264
-  _force: 300
+  _force: 150
   MaxBulletsInMag: 0
   BulletsRemainingInMag: 0
   WeaponSo: {fileID: 11400000, guid: 5992415771c6f93c1a588c56779f85db, type: 2}

@@ -1,19 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
     public class GlobalReferences : MonoBehaviour
     {
-        public GameObject bulletImpactPrefab;
-        public GameInput gameInput;
-        public GameObject pickupUI;
-        public GameObject pauseMenuUI;
-        public ParticleSystem explosionEffect;
+        public GameObject BulletImpactPrefab;
+        public GameInput GameInput;
+        public GameObject PickupUi;
+        public GameObject PauseMenuUi;
 
         public static GlobalReferences Instance { get; private set; }
 
+        [UsedImplicitly]
         private void Awake()
         {
             Instance = this;

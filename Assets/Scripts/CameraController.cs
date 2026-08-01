@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -5,31 +6,35 @@ namespace Assets.Scripts
     public class CameraController : MonoBehaviour
     {
         //Serialized Fields
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
         [SerializeField] private Transform _player;
         [SerializeField] private Transform _playerHead;
         [SerializeField] private float _mouseSensitivity;
         [SerializeField] private Camera _gunCamera;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value
 
         //Non-Serialized Fields
         private GameInput _gameInput;
-        private Camera _playerPOV;
+        private Camera _playerPov;
         private float _xRotation;
         private float _mouseX;
         private float _mouseY;
 
+        [UsedImplicitly]
         private void Start()
         {
             Cursor.lockState = CursorLockMode.Locked;
-            _gameInput = GlobalReferences.Instance.gameInput;
-            _mouseSensitivity = GameManager.mouseSensitivity;
-            _playerPOV = GetComponent<Camera>();
+            _gameInput = GlobalReferences.Instance.GameInput;
+            _mouseSensitivity = GameManager.Instance.MouseSensitivity;
+            _playerPov = GetComponent<Camera>();
         }
 
+        [UsedImplicitly]
         private void Update()
         {
-            _playerPOV.fieldOfView = _gameInput.IsPlayerAiming() ? 60 : 90;
+            _playerPov.fieldOfView = _gameInput.IsPlayerAiming() ? 60 : 90;
             _gunCamera.fieldOfView = _gameInput.IsPlayerAiming() ? 50 : 80;
-            _mouseSensitivity = GameManager.mouseSensitivity;
+            _mouseSensitivity = GameManager.Instance.MouseSensitivity;
             HandleRotation();
 
             _xRotation -= _mouseY;
@@ -45,13 +50,5 @@ namespace Assets.Scripts
             _mouseX = mouseDelta.x * _mouseSensitivity * Time.deltaTime;
             _mouseY = mouseDelta.y * _mouseSensitivity * Time.deltaTime;
         }
-
-        private void ResetRotation()
-        {
-            _mouseX = 0;
-            _mouseY = 0;
-        }
-
-        public bool IsRotating() => _mouseX != 0 || _mouseY != 0;
     }
 }

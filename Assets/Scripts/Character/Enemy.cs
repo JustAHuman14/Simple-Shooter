@@ -74,7 +74,7 @@ namespace Assets.Scripts.Character
             while (_weapon.BulletsRemainingInMag < _weapon.MaxBulletsInMag)
             {
                 _weapon.BulletsRemainingInMag++;
-                yield return new WaitForSeconds(_weapon.WeaponSo.secondsGapInReloading);
+                yield return new WaitForSeconds(_weapon.WeaponSo.SecondsGapInReloading);
             }
 
             _reloadCoroutine = null;
@@ -87,7 +87,7 @@ namespace Assets.Scripts.Character
             while (_weapon.BulletsRemainingInMag > 0 && _isPlayerInAttackRange && _reloadCoroutine == null)
             {
                 Attack();
-                yield return new WaitForSeconds(_weapon.WeaponSo.secondsGapBetweenBullets);
+                yield return new WaitForSeconds(_weapon.WeaponSo.SecondsGapBetweenBullets);
             }
 
             _attackCoroutine = null;

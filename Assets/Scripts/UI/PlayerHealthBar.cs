@@ -18,7 +18,7 @@ namespace Assets.Scripts.UI
 
         private void UpdateEnemyHealth()
         {
-            _healthBarImage.fillAmount = _player.CurrentHealth / _player.MmaxHealth;
+            _healthBarImage.fillAmount = _player.CurrentHealth / _player.MaxHealth;
         }
 
         private void OnDestroy()

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
+using JetBrains.Annotations;
 
 namespace Assets.Scripts
 {
@@ -17,8 +18,10 @@ namespace Assets.Scripts
         public event Action<InputAction.CallbackContext> OnExit;
         public event Action<InputAction.CallbackContext> OnSpawnEnemy;
 
+        [UsedImplicitly]
         private void Awake() => _playerInput = new PlayerInputActions();
 
+        [UsedImplicitly]
         private void Start()
         {
             _playerInput.Player.WeaponSwitch.performed += PlayerInput_OnWeaponSwitch;
@@ -29,7 +32,10 @@ namespace Assets.Scripts
             _playerInput.Player.Pickup.performed += PlayerInput_OnWeaponPick;
         }
 
+        [UsedImplicitly]
         private void OnEnable() => _playerInput.Player.Enable();
+
+        [UsedImplicitly]
         private void OnDisable() => _playerInput.Player.Disable();
 
         private void PlayerInput_OnExit(InputAction.CallbackContext context) => OnExit?.Invoke(context);
@@ -47,6 +53,5 @@ namespace Assets.Scripts
 
         public Vector2 GetPlayerMovementVector() => _playerInput.Player.Move.ReadValue<Vector2>();
         public Vector2 GetPlayerHeadMovement() => _playerInput.Player.HeadRotate.ReadValue<Vector2>();
-        public Vector2 GetPlayerPointerPosition() => _playerInput.Player.PointerPosition.ReadValue<Vector2>();
     }
 }

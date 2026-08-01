@@ -45,7 +45,7 @@ namespace Assets.Scripts.Weapon_Related
         private void Update()
         {
             if (Time.timeScale != 0 && IsPicked && !_isTicking &&
-                GlobalReferences.Instance.gameInput.IsPlayerAttacking())
+                GlobalReferences.Instance.GameInput.IsPlayerAttacking())
                 _isThrowing = true;
         }
 

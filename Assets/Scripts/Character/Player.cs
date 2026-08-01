@@ -43,7 +43,7 @@ namespace Assets.Scripts.Character
         private bool _isPickingWeapon;
         private readonly float _colorChangedAfterDamageSeconds = 0.05f;
         private Coroutine _fpsCoroutine;
-        public float MmaxHealth = 200f, CurrentHealth;
+        public float MaxHealth = 200f, CurrentHealth;
         private int _frameCount;
         public event Action<IWeapon> OnWeaponSwitch, OnWeaponShoot;
         public event Action<Weapon> OnWeaponReload;
@@ -55,15 +55,15 @@ namespace Assets.Scripts.Character
         {
             _rb = GetComponent<Rigidbody>();
             _rb.freezeRotation = true;
-            GameManager.mouseSensitivity = PlayerPrefs.GetFloat("mouseSensitivity");
-            CurrentHealth = MmaxHealth;
+            GameManager.Instance.MouseSensitivity = PlayerPrefs.GetFloat("mouseSensitivity");
+            CurrentHealth = MaxHealth;
         }
 
         [UsedImplicitly]
         private void Start()
         {
-            _pickupUi = GlobalReferences.Instance.pickupUI;
-            _gameInput = GlobalReferences.Instance.gameInput;
+            _pickupUi = GlobalReferences.Instance.PickupUi;
+            _gameInput = GlobalReferences.Instance.GameInput;
             _gameInput.OnSprint += HandleSprint;
             _gameInput.OnWeaponSwitch += HandleActiveGun;
             _gameInput.OnJump += _ => _isJumping = _isGrounded;
@@ -142,7 +142,7 @@ namespace Assets.Scripts.Character
                             weapon.OnShoot += _ => OnWeaponShoot?.Invoke(weapon);
                             weapon.OnReload += _ => OnWeaponReload?.Invoke(weapon);
 
-                            if (weapon.WeaponSo.weaponType == WeaponType.Primary)
+                            if (weapon.WeaponSo.WeaponType == WeaponType.Primary)
                             {
                                 switch (_primaryWeaponSlot1.childCount)
                                 {
@@ -171,7 +171,7 @@ namespace Assets.Scripts.Character
                                     }
                                 }
                             }
-                            else if (weapon.WeaponSo.weaponType == WeaponType.Secondary)
+                            else if (weapon.WeaponSo.WeaponType == WeaponType.Secondary)
                             {
                                 if (_secondaryWeaponSlot.childCount == 1)
                                 {

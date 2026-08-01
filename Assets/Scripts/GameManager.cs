@@ -1,7 +1,19 @@
+using JetBrains.Annotations;
+using UnityEngine;
+
 namespace Assets.Scripts
 {
-    public class GameManager
+    public class GameManager : MonoBehaviour
     {
-        public static float mouseSensitivity = 10f;
+        public float MouseSensitivity;
+        public static GameManager Instance { get; private set; }
+
+        [UsedImplicitly]
+        private void Awake()
+        {
+            MouseSensitivity = 10f;
+            Instance = this;
+            DontDestroyOnLoad(this);
+        }
     }
 }
