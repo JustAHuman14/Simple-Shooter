@@ -496,7 +496,7 @@ MonoBehaviour:
   _groundValue: -0.2
   _groundRadius: 0.5
   _interactRadius: 3
-  MmaxHealth: 200
+  MaxHealth: 200
   CurrentHealth: 0
 --- !u!54 &3298872854503315577
 Rigidbody:
@@ -968,8 +968,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 3298872854503315576}
+  _playerPov: {fileID: 3298872855836277988}
   _playerHead: {fileID: 3298872856046802436}
-  _mouseSensitivity: 20.6
+  _mouseSensitivity: 10
   _gunCamera: {fileID: 1148345785}
 --- !u!81 &3298872855836277989
 AudioListener:

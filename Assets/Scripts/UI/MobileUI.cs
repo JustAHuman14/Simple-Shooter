@@ -1,9 +1,16 @@
+using JetBrains.Annotations;
 using UnityEngine;
 
-public class MobileUI : MonoBehaviour
+namespace Assets.Scripts.UI
 {
-    private void Update()
+    [UsedImplicitly]
+    // ReSharper disable once InconsistentNaming
+    public class MobileUI : MonoBehaviour
     {
-        gameObject.SetActive(Application.isMobilePlatform);
+        [UsedImplicitly]
+        private void Update()
+        {
+            gameObject.SetActive(Application.isMobilePlatform);
+        }
     }
 }

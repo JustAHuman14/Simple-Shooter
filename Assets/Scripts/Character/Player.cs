@@ -55,7 +55,7 @@ namespace Assets.Scripts.Character
         {
             _rb = GetComponent<Rigidbody>();
             _rb.freezeRotation = true;
-            GameManager.Instance.MouseSensitivity = PlayerPrefs.GetFloat("mouseSensitivity");
+            GameManager.MouseSensitivity = PlayerPrefs.GetFloat("mouseSensitivity");
             CurrentHealth = MaxHealth;
         }
 

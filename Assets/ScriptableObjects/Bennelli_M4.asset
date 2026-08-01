@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27ce99b1bc81b7863b71f74170b2edab, type: 3}
   m_Name: Bennelli_M4
   m_EditorClassIdentifier: 
-  weaponType: 1
-  maxBulletsInMag: 7
-  secondsGapBetweenBullets: 0.35
-  secondsGapInReloading: 0.3
-  bulletRange: 76
-  gunPosition: {x: 0.15, y: 0, z: 0}
-  spreadDensityX: 0.04
-  spreadDensityY: 0.03
+  WeaponType: 1
+  MaxBulletsInMag: 7
+  SecondsGapBetweenBullets: 0.35
+  SecondsGapInReloading: 0.3
+  BulletRange: 76
+  GunPosition: {x: 0.15, y: 0, z: 0}
+  SpreadDensityX: 0.04
+  SpreadDensityY: 0.03

@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5a76930d955cf742b2962461e47a306, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneLoadProgress: 0
+  SceneLoadProgress: 0
 --- !u!4 &55139706
 Transform:
   m_ObjectHideFlags: 0
@@ -228,7 +228,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _startButton: {fileID: 1659252862}
   _quitButton: {fileID: 1416644388}
-  _loading: {fileID: 0}
 --- !u!1 &330675961
 GameObject:
   m_ObjectHideFlags: 0

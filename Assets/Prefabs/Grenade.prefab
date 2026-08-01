@@ -58,6 +58,7 @@ MonoBehaviour:
   _grenadeGameObject: {fileID: 2647308356324669872}
   _explosionEffect: {fileID: 9166194678333221094}
   _pin: {fileID: 465492941773528464}
+  _blastChainTimeGap: 0.5
 --- !u!64 &6568754031273510027
 MeshCollider:
   m_ObjectHideFlags: 0

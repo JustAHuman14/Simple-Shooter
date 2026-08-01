@@ -4,6 +4,7 @@ using Assets.Scripts.Interfaces;
 using UnityEngine;
 using UnityEngine.AI;
 using Assets.Scripts.Weapon_Related;
+using JetBrains.Annotations;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Character
@@ -11,6 +12,7 @@ namespace Assets.Scripts.Character
     public class Enemy : MonoBehaviour, IDamageable
     {
         //Serialized Fields
+#pragma warning disable CS0649 
         [SerializeField] private MeshRenderer _enemyHeadMeshRenderer;
         [SerializeField] private MeshRenderer _enemyTorsoMeshRenderer;
         [SerializeField] private LayerMask _playerLayerMask;
@@ -20,10 +22,11 @@ namespace Assets.Scripts.Character
         [SerializeField] private Weapon _weapon;
         [SerializeField] private Transform _camera;
         [SerializeField] private GameObject _muzzleFlash;
+#pragma warning restore CS0649 
 
         //Non-Serialized Fields
-        public float maxHealth = 200f;
-        public float currentHealth;
+        public float MaxHealth = 200f;
+        public float CurrentHealth;
         public event Action OnDamage;
         private Coroutine _attackCoroutine;
         private NavMeshAgent _agent;
@@ -36,19 +39,22 @@ namespace Assets.Scripts.Character
         private ParticleSystem _muzzleFlashEffect;
         private Coroutine _reloadCoroutine;
 
+        [UsedImplicitly]
         private void Awake()
         {
-            currentHealth = maxHealth;
+            CurrentHealth = MaxHealth;
             _muzzleFlashEffect = _muzzleFlash.GetComponent<ParticleSystem>();
             _weaponAudio = _weapon.GetComponent<AudioSource>();
         }
 
+        [UsedImplicitly]
         private void Start()
         {
             _agent = GetComponent<NavMeshAgent>();
             _player = GameObject.Find(nameof(Player)).transform;
         }
 
+        [UsedImplicitly]
         private void Update()
         {
             Vector3 playerDir = (_player.position - transform.position).normalized;
@@ -66,7 +72,6 @@ namespace Assets.Scripts.Character
 
             if (_weapon.BulletsRemainingInMag == 0)
                 _reloadCoroutine ??= StartCoroutine(ReloadWeaponRoutine());
-
         }
 
         private IEnumerator ReloadWeaponRoutine()
@@ -126,27 +131,27 @@ namespace Assets.Scripts.Character
 
         private void ChasePlayer() => _agent?.SetDestination(_player.position);
 
-        private void TakeDamage(int damage, MeshRenderer _enemyMeshRenderer)
+        private void TakeDamage(int damage, MeshRenderer enemyMeshRenderer)
         {
-            currentHealth -= damage;
+            CurrentHealth -= damage;
             OnDamage?.Invoke();
 
-            if (currentHealth <= 0)
+            if (CurrentHealth <= 0)
             {
-                currentHealth = 0;
+                CurrentHealth = 0;
                 Destroy(gameObject);
                 _agent = null;
                 return;
             }
 
-            StartCoroutine(PlayerDamagedRoutine(_enemyMeshRenderer));
+            StartCoroutine(PlayerDamagedRoutine(enemyMeshRenderer));
         }
 
-        private IEnumerator PlayerDamagedRoutine(MeshRenderer _enemyMeshRenderer)
+        private IEnumerator PlayerDamagedRoutine(MeshRenderer enemyMeshRenderer)
         {
-            _enemyMeshRenderer.material.color = Color.red;
+            enemyMeshRenderer.material.color = Color.red;
             yield return new WaitForSeconds(_colorChangedAfterDamageSeconds);
-            _enemyMeshRenderer.material.color = Color.white;
+            enemyMeshRenderer.material.color = Color.white;
         }
     }
 }

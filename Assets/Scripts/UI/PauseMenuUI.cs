@@ -1,21 +1,24 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
-using System;
+using JetBrains.Annotations;
 using UnityEngine.Rendering.Universal;
 
 namespace Assets.Scripts.UI
 {
+    // ReSharper disable once InconsistentNaming
     public class PauseMenuUI : MonoBehaviour
     {
         private GameInput _gameInput;
+#pragma warning disable CS0649
         [SerializeField] private Button _mainMenuBtn;
         [SerializeField] private Button _resumeBtn;
         [SerializeField] private Slider _mouseSensitivitySlider;
         [SerializeField] private Toggle _postProcessingToggle;
         [SerializeField] private UniversalAdditionalCameraData _playerCameraData;
+#pragma warning restore CS0649
 
+        [UsedImplicitly]
         private void Start()
         {
             _mouseSensitivitySlider.value = PlayerPrefs.GetFloat("mouseSensitivity");
@@ -31,10 +34,11 @@ namespace Assets.Scripts.UI
                 Time.timeScale = 1;
             });
 
-            _resumeBtn.onClick.AddListener(() => GameResume());
+            _resumeBtn.onClick.AddListener(GameResume);
             _mouseSensitivitySlider.onValueChanged.AddListener(ctx => GameManager.MouseSensitivity = ctx);
         }
 
+        [UsedImplicitly]
         private void Update() => _playerCameraData.renderPostProcessing = _postProcessingToggle.isOn;
 
         private void ToggleMenu(InputAction.CallbackContext context)
@@ -51,6 +55,7 @@ namespace Assets.Scripts.UI
             Cursor.lockState = CursorLockMode.Locked;
         }
 
+        [UsedImplicitly]
         private void OnDestroy()
         {
             if (_gameInput != null)

@@ -19,7 +19,7 @@ namespace Assets.Scripts.Weapon_Related
 #pragma warning restore CS0649
 
         [Header("Non-Serialized Fields")]
-        private float _dropForce;
+        [SerializeField] private float _dropForce;
         private GameInput _gameInput;
         private Vector3 _bulletDirection;
         public int MaxBulletsInMag;
@@ -44,7 +44,6 @@ namespace Assets.Scripts.Weapon_Related
         private void Awake()
         {
             _children = gameObject.GetComponentsInChildren<Transform>(true);
-            _dropForce = 3;
             _playerRb = GameObject.Find(nameof(Player)).GetComponent<Rigidbody>();
             _audioSource = GetComponent<AudioSource>();
             _rb = GetComponent<Rigidbody>();
@@ -80,7 +79,7 @@ namespace Assets.Scripts.Weapon_Related
             _rb.isKinematic = false;
             _collider.isTrigger = false;
             _rb.velocity = _playerRb.velocity;
-            _rb.AddForce(_playerCamera.transform.forward * _dropForce, ForceMode.Impulse);
+            _rb.AddForce(_playerCamera.transform.forward * _dropForce, ForceMode.Acceleration);
 
             foreach (Transform child in _children)
             {
@@ -132,13 +131,13 @@ namespace Assets.Scripts.Weapon_Related
 
             if (Physics.Raycast(_playerCamera.transform.position, _bulletDirection, out RaycastHit hit, WeaponSo.BulletRange))
             {
-                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+                if (hit.collider.attachedRigidbody != null)
                 {
-                    Rigidbody ragdollRb = hit.collider.attachedRigidbody;
+                    Rigidbody rb = hit.collider.attachedRigidbody;
                     NPC npc = hit.collider.gameObject.GetComponentInParent<NPC>();
                     npc?.TurnToRagdoll(_collider);
                     Physics.SyncTransforms();
-                    ragdollRb?.AddForceAtPosition(_bulletDirection * _force, hit.point, ForceMode.Impulse);
+                    rb?.AddForceAtPosition(_bulletDirection * _force, hit.point, ForceMode.Impulse);
                 }
                 
                 IDamageable damageable = hit.collider.GetComponentInParent<IDamageable>();

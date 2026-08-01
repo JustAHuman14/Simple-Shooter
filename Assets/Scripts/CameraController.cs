@@ -8,6 +8,7 @@ namespace Assets.Scripts
         //Serialized Fields
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
         [SerializeField] private Transform _player;
+        [SerializeField] private Camera _playerPov;
         [SerializeField] private Transform _playerHead;
         [SerializeField] private float _mouseSensitivity;
         [SerializeField] private Camera _gunCamera;
@@ -15,7 +16,6 @@ namespace Assets.Scripts
 
         //Non-Serialized Fields
         private GameInput _gameInput;
-        private Camera _playerPov;
         private float _xRotation;
         private float _mouseX;
         private float _mouseY;
@@ -25,8 +25,7 @@ namespace Assets.Scripts
         {
             Cursor.lockState = CursorLockMode.Locked;
             _gameInput = GlobalReferences.Instance.GameInput;
-            _mouseSensitivity = GameManager.Instance.MouseSensitivity;
-            _playerPov = GetComponent<Camera>();
+            _mouseSensitivity = GameManager.MouseSensitivity;
         }
 
         [UsedImplicitly]
@@ -34,7 +33,7 @@ namespace Assets.Scripts
         {
             _playerPov.fieldOfView = _gameInput.IsPlayerAiming() ? 60 : 90;
             _gunCamera.fieldOfView = _gameInput.IsPlayerAiming() ? 50 : 80;
-            _mouseSensitivity = GameManager.Instance.MouseSensitivity;
+            _mouseSensitivity = GameManager.MouseSensitivity;
             HandleRotation();
 
             _xRotation -= _mouseY;

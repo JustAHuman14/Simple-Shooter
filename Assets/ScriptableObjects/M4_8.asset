@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27ce99b1bc81b7863b71f74170b2edab, type: 3}
   m_Name: M4_8
   m_EditorClassIdentifier: 
-  weaponType: 0
-  maxBulletsInMag: 30
-  secondsGapBetweenBullets: 0.08
-  secondsGapInReloading: 0.08
-  bulletRange: 410
-  gunPosition: {x: -0.05, y: 0, z: 0.15}
-  spreadDensityX: 0.09
-  spreadDensityY: 0.1
+  WeaponType: 0
+  MaxBulletsInMag: 30
+  SecondsGapBetweenBullets: 0.08
+  SecondsGapInReloading: 0.08
+  BulletRange: 410
+  GunPosition: {x: -0.05, y: 0, z: 0.15}
+  SpreadDensityX: 0.09
+  SpreadDensityY: 0.1

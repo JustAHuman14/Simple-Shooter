@@ -142,6 +142,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 264
   _force: 40
+  _dropForce: 150
   MaxBulletsInMag: 0
   BulletsRemainingInMag: 0
   WeaponSo: {fileID: 11400000, guid: e3aaf9cd7cda18961849944fc0b02b55, type: 2}
@@ -203,7 +204,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3392393415562090959}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1

@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27ce99b1bc81b7863b71f74170b2edab, type: 3}
   m_Name: Uzi
   m_EditorClassIdentifier: 
-  weaponType: 1
-  maxBulletsInMag: 32
-  secondsGapBetweenBullets: 0.1
-  secondsGapInReloading: 0.05
-  bulletRange: 310
-  gunPosition: {x: 0.1, y: 0, z: 0}
-  spreadDensityX: 0.06
-  spreadDensityY: 0.05
+  WeaponType: 1
+  MaxBulletsInMag: 32
+  SecondsGapBetweenBullets: 0.1
+  SecondsGapInReloading: 0.05
+  BulletRange: 310
+  GunPosition: {x: 0.1, y: 0, z: 0}
+  SpreadDensityX: 0.06
+  SpreadDensityY: 0.05

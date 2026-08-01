@@ -19,6 +19,7 @@ namespace Assets.Scripts.Weapon_Related
         [SerializeField] private GameObject _grenadeGameObject;
         [SerializeField] private ParticleSystem _explosionEffect;
         [SerializeField] private GameObject _pin;
+        [SerializeField] private float _blastChainTimeGap;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value
 
         //Non-Serialized Field
@@ -76,9 +77,14 @@ namespace Assets.Scripts.Weapon_Related
                 child.gameObject.layer = 0;
             }
 
-            StartCoroutine(GrenadeBlastRoutine());
+            Blast();
         }
 
+	public void Blast() 
+	{
+	    StartCoroutine(GrenadeBlastRoutine());
+	}
+	
         private IEnumerator GrenadeBlastRoutine()
         {
             yield return new WaitForSeconds(3.8f);
@@ -89,9 +95,6 @@ namespace Assets.Scripts.Weapon_Related
 
             _explosionEffect.transform.parent = null;
             _explosionEffect.transform.position = transform.position;
-
-            Destroy(_grenadeGameObject);
-
             Collider[] colliders = Physics.OverlapSphere(transform.position, _blastRadius, _enemyLayerMask);
             _explosionEffect.transform.localScale = new(4.7f, 4.7f, 4.7f);
             _explosionEffect.transform.rotation = Quaternion.Euler(0, 0, 0);
@@ -108,8 +111,21 @@ namespace Assets.Scripts.Weapon_Related
                             ForceMode.Impulse);
                     }
                 }
+	    }
+
+	    foreach (Collider col in colliders)
+	    {
+                if (col.TryGetComponent(out Grenade grenade))
+                {
+                    if (grenade != this)
+                    {
+                        grenade.Blast();
+                        yield return new WaitForSeconds(_blastChainTimeGap);
+                    }
+                }
             }
 
+	    Destroy(_grenadeGameObject);
             yield return new WaitForSeconds(2f);
             Destroy(_explosionEffect.gameObject);
             Destroy(gameObject);

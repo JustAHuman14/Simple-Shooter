@@ -1,14 +1,20 @@
 using UnityEngine;
 using TMPro;
 using Assets.Scripts.Character;
+using JetBrains.Annotations;
 
 namespace Assets.Scripts.UI
 {
+    [UsedImplicitly]
     public class PickGun : MonoBehaviour
     {
-        private Player _player;
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
         [SerializeField] private TextMeshProUGUI _text;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value
 
+        private Player _player;
+
+        [UsedImplicitly]
         private void Start()
         {
             _player = GameObject.Find(nameof(Player)).GetComponent<Player>();

@@ -1,17 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
 {
+    [UsedImplicitly]
+    // ReSharper disable once InconsistentNaming
     public class LoadingBarUI : MonoBehaviour
     {
-        [SerializeField] private Image _loadingBarForeground;
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
+	    [SerializeField] private Image _loadingBarForeground;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value
     
-        private void Update()
+        [UsedImplicitly]
+	    private void Update()
     	{
-            _loadingBarForeground.fillAmount = Mathf.Lerp(_loadingBarForeground.fillAmount, SceneChanger.Instance.sceneLoadProgress, Time.deltaTime * 10f);
+            _loadingBarForeground.fillAmount = Mathf.Lerp(_loadingBarForeground.fillAmount, SceneChanger.Instance.SceneLoadProgress, Time.deltaTime * 10f);
 			
             if (_loadingBarForeground.fillAmount > 0.99f)
             	
